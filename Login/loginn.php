@@ -33,7 +33,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ((mysqli_num_rows($result2) > 0) && ($value != 5)) {
                 mysqli_data_seek($result2, 0);
                 while ($row = mysqli_fetch_assoc($result2)) {
-                    echo 'entra2';
                     if ($row["Email"] == $email && $row["Clave"] == $claveCifrada) {
                         $_SESSION['IdUsuario'] = $row["IdUsuario"];
                         $_SESSION['IdPiso'] = $row["IdPiso"];
@@ -47,7 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $result4 = mysqli_query($conn, $sql4);
 
 
-                        header("location: ../Administrador/index.php");
+                        if ($_SESSION['Rol'] == 'administrador') {
+                            header("location: ../Administrador/index.php");
+                        } else {
+                            header("location: ../Cliente/index.php");
+                        }
                     } else {
                         $_SESSION['errores'] = "El usuario está bloqueado";
                         header("location: login.php");
@@ -84,6 +87,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 } else {
     echo "<script>
-    window.location.href='../index.php'
+    window.location.href='../index.html'
     </script>";
 }

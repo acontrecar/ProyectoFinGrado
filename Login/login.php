@@ -21,8 +21,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item mx-0 mx-lg-1"></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="login.html">login</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="Registro/">singup</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="login.php">login</a></li>
                 </ul>
             </div>
         </div>
@@ -47,7 +46,7 @@
                             <div class="card mb-5">
                                 <div class="card-body d-flex flex-column align-items-center">
                                     <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon">
-                                        <a class="btn btn-outline-primary text-center btn-social rounded-circle" role="button"><i class="fa fa-sign-in fa-fw"></i></a>
+                                        <a class="btn btn-outline-primary text-center btn-social rounded-circle" role="button"><i class="fa fa-user fa-fw"></i></a>
                                     </div>
                                     <h4 class="text-dark mb-3">Bienvenido</h4>
 
