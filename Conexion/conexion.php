@@ -1,5 +1,5 @@
 <?php
-$servername = "sql925.main-hosting.eu";
+$servername = "sql513.main-hosting.eu";
 $database = "u417389617_pisos";
 $username = "u417389617_antonioc";
 $password = "B9!m;f*b";
