@@ -15,46 +15,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuariosSeleccionados = $_POST['usuariosSeleccionados'];
 
 
-    if (isset($idTarea, $start, $end, $descripcion, $usuariosSeleccionados)) {
-        require '../../Conexion/conexion.php';
+    if (strlen($descripcion) > 40) {
+        $response = array(
+            'success' => false,
+            'message' => 'La descripción no debe de ocupar más de 40 caracteres'
+        );
+        echo json_encode($response);
+    } else {
+        if (isset($idTarea, $start, $end, $descripcion, $usuariosSeleccionados) && strlen($descripcion) != 0) {
+            require '../../Conexion/conexion.php';
 
-        $idPiso = $_SESSION['IdPiso'];
+            $idPiso = $_SESSION['IdPiso'];
 
-        $sql = "INSERT INTO tareas values ('0','$idTarea','$idPiso','$start','$end','$descripcion')";
-        mysqli_query($conn, $sql);
+            $sql = "INSERT INTO tareas values ('0','$idTarea','$idPiso','$start','$end','$descripcion')";
+            mysqli_query($conn, $sql);
 
-        $sql2 = "SELECT IdTarea from tareas ORDER BY IdTarea DESC LIMIT 1";
-        $resultado2 = mysqli_query($conn, $sql2);
+            $sql2 = "SELECT IdTarea, IdTipoTarea from tareas ORDER BY IdTarea DESC LIMIT 1";
+            $resultado2 = mysqli_query($conn, $sql2);
 
-        // Verificar si hay resultados
-        if (mysqli_num_rows($resultado2) > 0) {
-            // Obtener el dato
-            $row = mysqli_fetch_array($resultado2);
-            $id_tarea = $row["IdTarea"];
+            // Verificar si hay resultados
+            if (mysqli_num_rows($resultado2) > 0) {
+                // Obtener el dato
+                $row = mysqli_fetch_array($resultado2);
+                $id_tarea = $row["IdTarea"];
+                $id_tipoTarea = $row["IdTipoTarea"];
 
-            foreach ($usuariosSeleccionados as $usuario) {
-                $sql3 = "INSERT INTO tareaUsuario values ('0','$usuario','$id_tarea')";
-                mysqli_query($conn, $sql3);
+                $sql4 = "SELECT Color from tipoTarea WHERE IdTipoTarea = $id_tipoTarea";
+                $resultado3 = mysqli_query($conn, $sql4);
+                $row2 = mysqli_fetch_array($resultado3);
+                $Color = $row2["Color"];
+
+
+                foreach ($usuariosSeleccionados as $usuario) {
+                    $sql3 = "INSERT INTO tareaUsuario values ('0','$usuario','$id_tarea')";
+                    mysqli_query($conn, $sql3);
+                }
+
+                $response = array(
+                    'success' => true,
+                    'message' => 'Tarea dada de alta correctamente',
+                    'title' => $descripcion,
+                    'start' => $start,
+                    'end' => $end,
+                    'color' => $Color
+                );
+                echo json_encode($response);
+            } else {
+                $response = array(
+                    'success' => false,
+                    'message' => 'No se ha podido dar de alta la tarea'
+                );
+                echo json_encode($response);
             }
-
-            $response = array(
-                'success' => true,
-                'message' => 'Tarea dada de alta correctamente'
-            );
-            echo json_encode($response);
         } else {
             $response = array(
                 'success' => false,
-                'message' => 'No se ha podido dar de alta la tarea'
+                'message' => 'Por favor, rellena todos los campos'
             );
             echo json_encode($response);
         }
-    } else {
-        $response = array(
-            'success' => false,
-            'message' => 'Por favor, rellena todos los campos'
-        );
-        echo json_encode($response);
     }
 } else {
     $response = array(

@@ -25,6 +25,8 @@ if ($_SESSION['Rol'] == 'cliente') {
         <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
 
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
         <style>
             .fc-body {
                 background-color: #f5f5f5;
@@ -90,7 +92,6 @@ if ($_SESSION['Rol'] == 'cliente') {
         </nav>
 
 
-
         <header class="text-center text-white bg-primary masthead mt-4">
             <div class="container">
                 <div class="mb-5 h5">
@@ -100,7 +101,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                     $sql = "SELECT * FROM tipoTarea";
                     $result = mysqli_query($conn, $sql);
                     echo "<select class='form-select' name='deplegableTarea' id='deplegableTarea'>";
-                    echo "<option value='0' id='0' name='0'>Mostrar todas las tareass</option>";
+                    echo "<option value='0' id='0' name='0'>Mostrar todas las tareas</option>";
 
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo "<option value='" . $row['IdTipoTarea'] . "' style='color:" . $row['Color'] . ";' id='" . $row['IdTipoTarea'] . "' name='" . $row['IdTipoTarea'] . "'>" . $row['NombreTarea'] . "</option>";
@@ -124,6 +125,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                         </button>
                     </div>
                     <div class="modal-body">
+                        <span id="tituloError" class="text-danger"></span>
                         <div class="container">
                             <div class="row">
                                 <p>¿Qué tipo de tarea es?</p>
@@ -147,7 +149,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                 <div class="col">
 
                                     <?php
-                                    $sql = "SELECT * FROM usuarios where IdPiso=" . $_SESSION['IdPiso'] . " ";
+                                    $sql = "SELECT * FROM usuarios where IdPiso=" . $_SESSION['IdPiso'] . " and IdUsuario!= " . $_SESSION['IdUsuario'];
                                     $result = mysqli_query($conn, $sql);
 
                                     echo "<div class='form-group'>";
@@ -171,7 +173,7 @@ if ($_SESSION['Rol'] == 'cliente') {
 
                             <div class="row mt-4">
                                 <p>¿De qué se trata la tarea?</p>
-                                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                                <textarea class="form-control" id="descripcion" name="descripcion" rows="3" maxlength="40"></textarea>
                             </div>
                         </div>
                     </div>
@@ -206,63 +208,36 @@ if ($_SESSION['Rol'] == 'cliente') {
 
         </footer>
 
-        <?php
-        //Recojo las tareas para mostrarlas en el calendario
-        $sql = "SELECT * FROM tareas WHERE IdPiso=" . $_SESSION['IdPiso'] . " ";
-        $result = mysqli_query($conn, $sql);
-        $tareas = array();
-        while ($row = mysqli_fetch_assoc($result)) {
-            $tareas[] = $row;
-        }
-        $jsonTareas = json_encode($tareas);
-        echo "<script>var tareas = " . $jsonTareas . ";</script>";
-
-        echo "<script>console.log(tareas)</script>";
-
-
-        ?>
 
         <script>
             //Recoger los datos
-            const filtroTareas = document.getElementById('deplegableTarea');
 
-            filtroTareas.addEventListener('change', () => {
-                const valorSeleccionado = filtroTareas.value;
-                console.log(valorSeleccionado)
-                const xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() {
-                    if (this.readyState === 4 && this.status === 200) {
-                        const resultados = JSON.parse(this.responseText);
-                        // aquí actualizas la página para mostrar solo los resultados obtenidos
-                        console.log(resultados);
-                    }
-                };
+            var calendar, ultimoEventoId;
 
-                xhr.open('GET', `cargaTareas.php?filtro=${valorSeleccionado}`, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
+            /*var i = 0;
 
-                xhr.send();
-            });
+            if (i == 0) {
+                initCalendar([]);
+                i++;
+            }*/
+
+            muestraCalendarioSinEventos();
 
 
-            $(document).ready(function() {
-
-                $('#calendar').fullCalendar({
+            function initCalendar(events) {
+                calendar = $('#calendar').fullCalendar({
                     // Configuración del calendario
                     header: {
                         left: 'prev,next today',
                         center: 'title',
                         right: 'month,agendaWeek,agendaDay'
                     },
-                    defaultDate: '2023-03-21',
                     navLinks: true,
-                    editable: true,
                     eventLimit: true,
                     selectable: true,
                     selectHelper: true,
-                    //event: resultados,
+                    events: events,
                     select: function(start, end, allDays) {
-
 
                         $('#event-modal').modal('toggle');
 
@@ -271,6 +246,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                             var checkboxes = document.getElementsByName("usuarios[]"); //array de checkboxes
                             var usuariosSeleccionados = []; //array donde se guardan los usuarios seleccionados
 
+                            console.log(events);
                             for (var i = 0; i < checkboxes.length; i++) {
                                 if (checkboxes[i].checked) {
                                     usuariosSeleccionados.push(checkboxes[i].value);
@@ -282,35 +258,128 @@ if ($_SESSION['Rol'] == 'cliente') {
                             }
 
                             var descripcion = $('#descripcion').val();
-                            var start = moment(start).format("Y-MM-DD HH:mm:ss");
-                            var end = moment(end).format("Y-MM-DD HH:mm:ss");
+                            var fechaInicio = moment(start).format("Y-MM-DD HH:mm:ss");
+                            var fechaFin = moment(end).format("Y-MM-DD HH:mm:ss");
+
+                            console.log('start:' + fechaInicio + 'end:' + fechaFin + 'descripcion:' + descripcion);
+
                             $.ajax({
                                 url: 'insertaTarea.php',
                                 type: "POST",
                                 data: {
                                     title: title,
-                                    start: start,
-                                    end: end,
+                                    start: fechaInicio,
+                                    end: fechaFin,
                                     descripcion: descripcion,
                                     usuariosSeleccionados: usuariosSeleccionados
                                 },
                                 success: function(response) {
-                                    console.log(response);
-                                    $('#event-modal').modal('hide');
-                                }
+                                    if (response.success) {
+                                        $('#event-modal').modal('hide');
+                                        $('#calendar').fullCalendar('renderEvent', {
+                                            'id': response.id,
+                                            'title': response.title,
+                                            'start': response.start,
+                                            'end': response.end,
+                                            'color': response.color
+                                        });
+                                        swal("Bien", "Tu tarea se ha dado de alta", "success");
+                                    } else {
+                                        $('#tituloError').html(response.message);
+                                    }
+                                },
                             });
+
+                            $('#deplegableTareaModal').val('');
+                            $('input[name="usuarios[]"]').prop('checked', false);
+                            $('#descripcion').val('');
                         });
                     },
 
+                    //Parte de eliminar evento
+                    eventClick: function(event) {
 
+                        var eventId = event.id;
 
+                        if (confirm('Estas seguro de eliminar la tarea')) {
+                            $.ajax({
+                                url: 'borraTarea.php',
+                                type: "POST",
+                                data: {
+                                    id: eventId
+                                },
+                                success: function(response) {
+                                    //$('#calendar').fullCalendar('removeEvents', response.id);
+                                    swal("Bien", "Tu tarea se ha eliminado", "success");
+                                },
+                                error: function(response) {
+                                    console.log('mal')
+                                }
+                            });
+                        }
 
-                    /*eventClick: function(event) {
-                        $('#event-modal-label').html(event.title);
-                        $('#event-date').html(moment(event.start).format('DD/MM/YYYY'));
-                        $('#event-modal').modal();
-                    }*/
+                    },
+
                 });
+            }
+
+            function muestraCalendarioConEventos(datosFiltrado) {
+                $(document).ready(function() {
+                    if (!calendar) {
+                        initCalendar(datosFiltrado);
+                    } else {
+                        calendar.fullCalendar('removeEvents');
+                        calendar.fullCalendar('addEventSource', datosFiltrado);
+                    }
+                });
+            }
+
+            function muestraCalendarioSinEventos() {
+                $(document).ready(function() {
+                    if (!calendar) {
+                        initCalendar([]);
+                    } else {
+                        calendar.fullCalendar('removeEvents');
+                    }
+                });
+            }
+
+            const filtroTareas = document.getElementById('deplegableTarea');
+            var datosFiltrado;
+
+            filtroTareas.addEventListener('change', () => {
+                const valorSeleccionado = filtroTareas.value;
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (this.readyState === 4 && this.status === 200) {
+                        const resultados = JSON.parse(this.responseText);
+                        // aquí actualizas la página para mostrar solo los resultados obtenidos
+
+                        var tareasInicial = resultados.data;
+
+                        if (resultados.success == true) {
+                            datosFiltrado = tareasInicial.map(function(item) {
+                                return {
+                                    id: item.IdTarea,
+                                    title: item.Descripción,
+                                    start: item.FechaInicio,
+                                    end: item.FechaFin,
+                                    color: item.Color
+                                };
+                            })
+                            muestraCalendarioConEventos(datosFiltrado);
+                        } else {
+                            muestraCalendarioSinEventos();
+                        }
+
+
+                    }
+                };
+
+                xhr.open('GET', `cargaTareas.php?filtro=${valorSeleccionado}`, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.send();
             });
         </script>
 

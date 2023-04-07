@@ -15,9 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     if (
         $filtro === '0'
     ) {
-        $sql = 'SELECT * FROM tareas where IdPiso = ' . $_SESSION['IdPiso'];
+        //SELECT DISTINCT t.IdTarea,t.FechaInicio,t.FechaFin,t.Descripción, r.Color FROM tareas t,tipoTarea r where t.IdPiso = 12 and r.IdTipoTarea=t.IdTipoTarea
+        //$sql = 'SELECT * FROM tareas where IdPiso = ' . $_SESSION['IdPiso'];
+        $sql = "SELECT DISTINCT t.IdTarea,t.FechaInicio,t.FechaFin,t.Descripción, r.Color FROM tareas t,tipoTarea r where t.IdPiso = " . $_SESSION["IdPiso"] . " and r.IdTipoTarea=t.IdTipoTarea";
     } else {
-        $sql = "SELECT * FROM tareas WHERE IdTipoTarea = '$filtro' and IdPiso = " . $_SESSION['IdPiso'];
+        $sql = "SELECT DISTINCT t.IdTarea,t.FechaInicio,t.FechaFin,t.Descripción, r.Color FROM tareas t,tipoTarea r where t.IdPiso = " . $_SESSION["IdPiso"] . " and r.IdTipoTarea=t.IdTipoTarea and r.IdTipoTarea = '$filtro'";
+        //$sql = "SELECT * FROM tareas WHERE IdTipoTarea = '$filtro' and IdPiso = " . $_SESSION['IdPiso'];
     }
 
     $resultado = mysqli_query($conn, $sql);
@@ -25,13 +28,26 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     if (mysqli_num_rows($resultado) > 0) {
         // construye un array con los resultados de la consulta
         $resultadosArray = array();
+        $arrayTareas = array();
 
         while ($fila = mysqli_fetch_assoc($resultado)) {
             $resultadosArray[] = $fila;
         }
 
+        /*foreach ($resultadosArray as $resultado) {
+            $arrayTareas[] = [
+                'title' => $resultado->Descripcion,
+                'start' => $resultado->FechaInicio,
+                'end' => $resultado->FechaFin
+            ];
+        }*/
+
         // devuelve los resultados como un objeto JSON
-        echo json_encode($resultadosArray);
+        $response = array(
+            'success' => true,
+            'data' => $resultadosArray,
+        );
+        echo json_encode($response);
     } else {
         // no se encontraron resultados
         $response = array(
