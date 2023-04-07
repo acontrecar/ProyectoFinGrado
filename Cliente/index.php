@@ -56,8 +56,10 @@ if ($_SESSION['Rol'] == 'cliente') {
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item mx-0 mx-lg-1"></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="login.html">login</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="Registro/">singup</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="Calendario/muestraCalendario.php">Calendario</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="Registro/">Deudas</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="Modificar/modificar.php">Modificar</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="../Conexion/desconexion.php">Salir</a></li>
                     </ul>
                 </div>
             </div>
@@ -93,7 +95,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                     <h2>
                                         <a href="Calculos/" class="text-decoration-none" style="color: white;">
                                             <i class="fa fa-folder-o pr-2" aria-hidden="true"></i>
-                                            Ir a ajustar cuentas
+                                            Cuentas
                                         </a>
                                     </h2>
                                 </div>
@@ -107,9 +109,9 @@ if ($_SESSION['Rol'] == 'cliente') {
                     <div class="col-8">
                         <div class="p-3 mb-3">
                             <h2>
-                                <a href="Calendario/muestraCalendario.php" class="text-decoration-none" style="color: white;">
+                                <a href="Calendario/CalendarioPersonal/muestraCalendario.php" class="text-decoration-none" style="color: white;">
                                     <i class="fa fa-folder-o pr-2" aria-hidden="true"></i>
-                                    Ir a calendario personal
+                                    Mis Tareas
                                 </a>
                             </h2>
                         </div>

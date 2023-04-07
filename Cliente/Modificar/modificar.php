@@ -1,0 +1,223 @@
+<?php
+session_start();
+
+// Verifica si hay un mensaje de error almacenado en la sesión
+if ($_SESSION['Rol'] == 'cliente') {
+?>
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>Home - Brand</title>
+        <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&amp;display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&amp;display=swap">
+        <link rel="stylesheet" href="../../assets/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../../assets/bootstrap/css/styles.css">
+        <link rel="stylesheet" href="../../assets/bootstrap/css/Login-Form-Basic-icons.css">
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+
+
+    </head>
+
+    <body>
+        <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger" href="../index.php"><i style="color:white" class="fa fa-home fa-2x" aria-hidden="true"></i>ContrePisos</a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item mx-0 mx-lg-1"></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="../Calendario/muestraCalendario.php">Calendario</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="">Deudas</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="">Modificar</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="../../Conexion/desconexion.php">Salir</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <header class="text-center text-white bg-primary masthead mt-4">
+            <?php
+            include '../../Conexion/conexion.php';
+            $IdUsuario = $_SESSION['IdUsuario'];
+            $sql = "SELECT * FROM usuarios WHERE IdUsuario = '$IdUsuario'";
+            $result = mysqli_query($conn, $sql);
+
+            //Posible errores
+            if (isset($_SESSION['erroresPassword'])) {
+                $erroresPassword = $_SESSION['erroresPassword'];
+                unset($_SESSION['erroresPassword']);
+            }
+            if (isset($_SESSION['erroresNombre'])) {
+                $erroresNombre = $_SESSION['erroresNombre'];
+                unset($_SESSION['erroresNombre']);
+            }
+            if (isset($_SESSION['erroresEmail'])) {
+                $erroresEmail = $_SESSION['erroresEmail'];
+                unset($_SESSION['erroresEmail']);
+            }
+
+
+            if ($reg = mysqli_fetch_array($result)) {
+            ?>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto" style="width: 70%;">
+                            <h1 class="brand-heading" style="font-size: 40px;padding-left: 3px;margin-left: 0px;margin-bottom: -23px;">MODIFICAR</h1>
+                            <section class="py-4 py-xl-5">
+                                <div class="container">
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-md-12 col-lg-12 col-xl-12">
+                                            <div class="card mb-5">
+                                                <div class="card-body d-flex flex-column align-items-center">
+                                                    <form action="confirmacion.php" class="text-center" method="post">
+                                                        <div class="form-group row mt-3">
+                                                            <div class="col-sm-12">
+                                                                <label class="text-secondary" for="nombre">Nombre:</label>
+                                                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" value="<?php echo $reg['Nombre'] ?>">
+                                                                <input type="hidden" class="form-control" id="IdUsuario" name="IdUsuario" value="<?php echo $reg['IdUsuario'] ?>">
+                                                            </div>
+
+                                                            <?php
+                                                            if (isset($erroresNombre)) {
+                                                            ?>
+                                                                <div class="col-sm-12 mt-3">
+                                                                    <div id="passwordError" style="color:red; font-style: italic;">
+                                                                        <?php
+                                                                        echo $erroresNombre;
+                                                                        ?>
+                                                                    </div>
+                                                                </div>
+                                                            <?php } ?>
+
+                                                        </div>
+                                                        <div class="form-group row mt-3">
+                                                            <div class="col-sm-12">
+                                                                <label class="text-secondary" for="email">Email:</label>
+                                                                <input type="text" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" id="email" name="email" placeholder="Email" value="<?php echo $reg['Email'] ?>">
+                                                            </div>
+
+                                                            <?php
+                                                            if (isset($erroresEmail)) {
+                                                            ?>
+                                                                <div class="col-sm-12 mt-3">
+                                                                    <div id="passwordError" style="color:red; font-style: italic;">
+                                                                        <?php
+                                                                        echo $erroresEmail;
+                                                                        ?>
+                                                                    </div>
+                                                                </div>
+                                                            <?php } ?>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <div class="col-sm-12 mt-3">
+                                                                <div id="passwordError" style="color:red; font-style: italic;">
+                                                                    <?php
+                                                                    if (isset($erroresPassword)) {
+                                                                        echo $erroresPassword;
+                                                                    }
+                                                                    ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+
+                                                            <div class="col-sm-6 mt-4">
+                                                                <input type="text" class="form-control" id="contraseña" name="contraseña" placeholder="Contraseña">
+                                                            </div>
+                                                            <div class="col-sm-6 mt-4">
+                                                                <input type="text" class="form-control" id="contraseña2" name="contraseña2" placeholder="Confirmar Contraseña">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row d-flex justify-content-center">
+                                                            <div class="col">
+                                                                <input type="reset" class="btn btn-danger px-4 mt-4" value="Cancelar">
+                                                            </div>
+                                                            <div class="col">
+                                                                <button type="submit" id="boton" class="btn btn-primary px-4 mt-4">Guardar</button>
+                                                            </div>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+        </header>
+
+
+
+
+
+        <footer class="text-center footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-5 mb-lg-0">
+
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="text-uppercase">About me</h4>
+                        <ul class="list-inline">
+                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://github.com/acontrecar"><i class="fa fa-github fa-fw"></i></a>
+                            </li>
+                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://www.linkedin.com/in/antoniocontrerasc%C3%A1rdenas/"><i class="fa fa-linkedin-square fa-fw"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+
+        <script>
+            $(document).ready(function() {
+                $("#contraseña").keyup(function() {
+                    var contraseña = $("#contraseña").val();
+                    var contraseña2 = $("#contraseña2").val();
+                    if (contraseña != contraseña2) {
+                        $("#passwordError").html("*Las contraseñas no coinciden");
+                        $("#boton").attr("disabled", true);
+                    } else {
+                        $("#passwordError").html("");
+                        $("#boton").attr("disabled", false);
+                    }
+                });
+                $("#contraseña2").keyup(function() {
+                    var contraseña = $("#contraseña").val();
+                    var contraseña2 = $("#contraseña2").val();
+                    if (contraseña != contraseña2) {
+                        $("#boton").attr("disabled", true);
+                        $("#passwordError").html("*Las contraseñas no coinciden");
+                    } else {
+                        $("#passwordError").html("");
+                        $("#boton").attr("disabled", false);
+                    }
+                });
+            });
+        </script>
+
+        <script src="validaDatos.js"></script>
+        <script src="../../assets/js/jquery.min.js"></script>
+        <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="calendario.js"></script>
+
+    </body>
+
+
+    </html>
+<?php } else {
+    header('Location: ../../index.html');
+}

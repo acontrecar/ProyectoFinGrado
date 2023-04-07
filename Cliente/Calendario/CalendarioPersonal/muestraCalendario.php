@@ -13,12 +13,12 @@ if ($_SESSION['Rol'] == 'cliente') {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title>Home - Brand</title>
-        <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../../assets/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&amp;display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&amp;display=swap">
-        <link rel="stylesheet" href="../../assets/fonts/font-awesome.min.css">
-        <link rel="stylesheet" href="../../assets/bootstrap/css/styles.css">
-        <link rel="stylesheet" href="../../assets/bootstrap/css/Login-Form-Basic-icons.css">
+        <link rel="stylesheet" href="../../../assets/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../../../assets/bootstrap/css/styles.css">
+        <link rel="stylesheet" href="../../../assets/bootstrap/css/Login-Form-Basic-icons.css">
 
         <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
@@ -99,7 +99,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                 <div class="mb-5 h5">
                     <?php
                     //Menu desplegable con bootstrap
-                    require '../../Conexion/Conexion.php';
+                    require '../../../Conexion/Conexion.php';
                     $sql = "SELECT * FROM tipoTarea";
                     $result = mysqli_query($conn, $sql);
                     echo "<select class='form-select' name='deplegableTarea' id='deplegableTarea'>";
@@ -351,8 +351,6 @@ if ($_SESSION['Rol'] == 'cliente') {
                                 });
                             }
                         });
-
-
                     },
 
                 });
@@ -418,7 +416,7 @@ if ($_SESSION['Rol'] == 'cliente') {
             });
         </script>
 
-        <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../../../assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="calendario.js"></script>
 
     </body>
@@ -426,5 +424,5 @@ if ($_SESSION['Rol'] == 'cliente') {
 
     </html>
 <?php } else {
-    header('Location: ../../index.html');
+    header('Location: ../../..//index.html');
 }

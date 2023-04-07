@@ -15,10 +15,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuariosSeleccionados = $_POST['usuariosSeleccionados'];
 
 
-    if (strlen($descripcion) > 40) {
+    if (strlen($descripcion) > 100) {
         $response = array(
             'success' => false,
-            'message' => 'La descripción no debe de ocupar más de 40 caracteres'
+            'message' => 'La descripción no debe de ocupar más de 100 caracteres'
         );
         echo json_encode($response);
     } else {

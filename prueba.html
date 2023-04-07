@@ -1,0 +1,36 @@
+mapboxgl.accessToken = 'TU_ACCESS_TOKEN';
+var map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/mapbox/streets-v11',
+center: [-74.5, 40], // longitud, latitud
+zoom: 9
+});
+
+var direccion = 'Nombre de la calle, Ciudad';
+
+// Utiliza la API de geocodificación de Mapbox para obtener la ubicación de la calle
+$.ajax({
+url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + direccion + '.json?access_token=' + mapboxgl.accessToken,
+method: 'GET',
+dataType: 'json',
+success: function(response) {
+// La respuesta contiene un arreglo de resultados de geocodificación
+var features = response.features;
+if (features.length > 0) {
+// Toma la primera ubicación resultante
+var ubicacion = features[0].center;
+// Mueve el mapa a la ubicación resultante
+map.setCenter(ubicacion);
+// Agrega un marcador en la ubicación resultante
+new mapboxgl.Marker()
+.setLngLat(ubicacion)
+.addTo(map);
+} else {
+// No se encontró ninguna ubicación resultante
+console.log('No se encontró ninguna ubicación para ' + direccion);
+}
+},
+error: function(response) {
+console.log('Error al geocodificar ' + direccion);
+}
+});
