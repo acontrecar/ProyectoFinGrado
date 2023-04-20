@@ -46,7 +46,17 @@ if ($_SESSION['Rol'] == 'cliente') {
 
         <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
         <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css" type="text/css">
+        <!--a fa-calculator-->
 
+        <style>
+            @media (max-width: 480px) {
+                .table {
+                    font-size: 12px;
+                    width: 100%;
+                    overflow-x: auto;
+                }
+            }
+        </style>
     </head>
 
     <body>
@@ -55,11 +65,29 @@ if ($_SESSION['Rol'] == 'cliente') {
                 <a class="navbar-brand js-scroll-trigger" href="../index.html"><i style="color:white" class="fa fa-home fa-2x" aria-hidden="true"></i>ContrePisos</a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1"></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="Calendario/muestraCalendario.php">Calendario</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="Registro/">Deudas</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="Modificar/modificar.php">Modificar</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="../Conexion/desconexion.php">Salir</a></li>
+                        <li class="nav-item mx-0 mx-lg-1">
+                            <div class="nav-item dropdown mt-2">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Actividades
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="Calendario/muestraCalendario.php">Calendario Grupal</a>
+                                    <a class="dropdown-item" href="">Calendario Personal</a>
+                                    <a class="dropdown-item" href="Cuentas/paginaCuentas.php">Cuentas</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item mx-0 mx-lg-1">
+                            <div class="nav-item dropdown mt-2">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Perfil
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="Modificar/modificar.php">Modificar</a>
+                                    <a class="dropdown-item" href="../Conexion/desconexion.php">Salir</a>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -70,20 +98,84 @@ if ($_SESSION['Rol'] == 'cliente') {
         <header class="text-center text-white bg-primary masthead mt-4">
             <div class="container">
                 <h1 style="font-size: 300%;">Bienvenido a <?php echo $nombrePiso ?></h1>
+                <h1 style="font-size: 280%;">Esperamos que todo vaya bien</h1>
                 <hr class="star-light">
-                <h1 style="font-size: 280%;">Que deseas hacer?</h1>
-
 
                 <div class="row justify-content-center mt-5">
-                    <div class="col-8">
-                        <div class="p-3 mb-3">
-                            <h2>
-                                <a href="Calendario/muestraCalendario.php" class="text-decoration-none" style="color: white;">
-                                    <i class="fa fa-folder-o pr-2" aria-hidden="true"></i>
-                                    Ir a calendario grupal
-                                </a>
-                            </h2>
-                        </div>
+
+                    <div class="col">
+
+
+                        <?php
+
+                        //Cargo las tareas del usuario de la semana en el caso de que las haya
+
+                        // Fecha actual
+                        $fechaActual = date('Y-m-d');
+
+                        // Fecha del domingo de esta semana
+                        $fechaDomingo = date('Y-m-d', strtotime('sunday this week'));
+
+                        $sql2 = "SELECT DISTINCT t.IdTarea,t.IdTipoTarea,t.FechaInicio,t.FechaFin,t.Descripción FROM tareas t, tareaUsuario p
+                                WHERE p.IdUsuario=" . $_SESSION['IdUsuario'] . " AND p.IdTarea=t.IdTarea  AND
+                                t.FechaInicio BETWEEN DATE(NOW()) AND DATE_SUB(DATE(NOW()), INTERVAL WEEKDAY(NOW()) DAY) 
+                                OR t.FechaFin BETWEEN DATE(NOW()) AND DATE_SUB(DATE(NOW()), INTERVAL WEEKDAY(NOW()) - 6 DAY)";
+                        $result2 = mysqli_query($conn, $sql2);
+
+                        $num_filas = mysqli_num_rows($result2);
+
+                        if ($reg = mysqli_fetch_array($result2)) {
+
+                        ?>
+                            <h2>Actualmente en tu agenda tienes <?php echo $num_filas ?> tarea</h2>
+                            <button type="button" class="btn btn-primary" id="botonTareas" data-toggle="collapse" data-target="#tareas">Ver Tareas</button>
+
+                            <div id="tablaTareas" style="display: none;">
+                                <table class="table table-striped table-info mt-5">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Tipo</th>
+                                            <th scope="col">Fecha Inicio</th>
+                                            <th scope="col">Fecha Fin</th>
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+
+                                        do {
+                                            $sql3 = "SELECT * FROM tipoTarea WHERE IdTipoTarea = " . $reg['IdTipoTarea'];
+                                            $result3 = mysqli_query($conn, $sql3);
+                                            $reg3 = mysqli_fetch_array($result3);
+                                        ?>
+                                            <tr>
+                                                <td><?php echo $reg3['NombreTarea'] ?></td>
+                                                <td><?php echo $reg['FechaInicio'] ?></td>
+                                                <td><?php echo $reg['FechaFin'] ?></td>
+                                                <td><?php echo $reg['Descripción'] ?></td>
+                                                <td><a href="eliminarTarea.php?id=<?php echo $reg['IdTarea'] ?>"><i class="fa fa-check" aria-hidden="true"></i></a></td>
+                                            </tr>
+                                        <?php
+                                        } while ($reg = mysqli_fetch_array($result2));
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php } else {
+                        ?>
+                            <h2>Wao, parece que esta semana no tienes nada</h2>
+                        <?php
+                        }
+                        ?>
+
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mt-5">
+                    <div class="col">
+                        <h2>Actualmente a los integrantes del piso les debes:<?php //Aqui va un input de lo que debes a los demas 
+                                                                                ?></h2>
                     </div>
                 </div>
 
@@ -93,7 +185,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                             <div class="col-8">
                                 <div class="p-3 mb-3">
                                     <h2>
-                                        <a href="Calculos/" class="text-decoration-none" style="color: white;">
+                                        <a href="Cuentas/paginaCuentas.php" class="text-decoration-none" style="color: white;">
                                             <i class="fa fa-folder-o pr-2" aria-hidden="true"></i>
                                             Cuentas
                                         </a>
@@ -103,21 +195,6 @@ if ($_SESSION['Rol'] == 'cliente') {
                         </div>
                     </div>
                 </div>
-
-
-                <div class="row justify-content-center mt-2">
-                    <div class="col-8">
-                        <div class="p-3 mb-3">
-                            <h2>
-                                <a href="Calendario/CalendarioPersonal/muestraCalendario.php" class="text-decoration-none" style="color: white;">
-                                    <i class="fa fa-folder-o pr-2" aria-hidden="true"></i>
-                                    Mis Tareas
-                                </a>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-
 
 
                 <div class="row justify-content-center mt-2">
@@ -195,7 +272,20 @@ if ($_SESSION['Rol'] == 'cliente') {
                 </div>
             </div>
         </footer>
-
+        <script>
+            var pulsa = false;
+            document.getElementById('botonTareas').addEventListener('click', function() {
+                if (pulsa == false) {
+                    document.getElementById('tablaTareas').style.display = 'block';
+                    document.getElementById('botonTareas').innerHTML = 'Ocultar Tareas'
+                    pulsa = true;
+                } else {
+                    document.getElementById('tablaTareas').style.display = 'none';
+                    document.getElementById('botonTareas').innerHTML = 'Ver Tareas'
+                    pulsa = false;
+                }
+            });
+        </script>
         <script src="../assets/js/jquery.min.js"></script>
         <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="../assets/js/jquery.easing.min.js"></script>
