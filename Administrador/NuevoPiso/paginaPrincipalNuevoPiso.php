@@ -83,8 +83,8 @@ if ($_SESSION['Rol'] == 'administrador') {
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="nombreCalle">Nombre de la calle</label>
-                            <input type="text" class="form-control" name="nombreCalle" id="nombreCalle">
+                            <label for="nombreCalle">Nombre de la calle*</label>
+                            <input type="text" class="form-control" name="nombreCalle" require id="nombreCalle">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="nombrePiso">Nombre del piso</label>

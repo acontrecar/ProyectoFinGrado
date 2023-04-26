@@ -177,7 +177,7 @@ if ($_SESSION['Rol'] == 'cliente') {
 
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<div class='form-check'>";
-                                        if ($row['Nombre']) {
+                                        if (!isset($row['Nombre'])) {
                                             echo "<input type='checkbox' class='form-check-input' id='" . $row['IdUsuario'] . "' name='usuarios[]' value='" . $row['IdUsuario'] . "'>";
                                             echo "<label class='form-check-label' for='" . $row['IdUsuario'] . "'>" . $row['Email'] . "</label>";
                                         } else {

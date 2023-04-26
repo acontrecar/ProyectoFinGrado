@@ -72,7 +72,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="Calendario/muestraCalendario.php">Calendario Grupal</a>
-                                    <a class="dropdown-item" href="">Calendario Personal</a>
+                                    <!--<a class="dropdown-item" href="">Calendario Personal</a>-->
                                     <a class="dropdown-item" href="Cuentas/paginaCuentas.php">Cuentas</a>
                                 </div>
                             </div>
@@ -116,10 +116,14 @@ if ($_SESSION['Rol'] == 'cliente') {
                         // Fecha del domingo de esta semana
                         $fechaDomingo = date('Y-m-d', strtotime('sunday this week'));
 
-                        $sql2 = "SELECT DISTINCT t.IdTarea,t.IdTipoTarea,t.FechaInicio,t.FechaFin,t.Descripción FROM tareas t, tareaUsuario p
-                                WHERE p.IdUsuario=" . $_SESSION['IdUsuario'] . " AND p.IdTarea=t.IdTarea  AND
-                                t.FechaInicio BETWEEN DATE(NOW()) AND DATE_SUB(DATE(NOW()), INTERVAL WEEKDAY(NOW()) DAY) 
-                                OR t.FechaFin BETWEEN DATE(NOW()) AND DATE_SUB(DATE(NOW()), INTERVAL WEEKDAY(NOW()) - 6 DAY)";
+                        $sql2 = "SELECT DISTINCT t.IdTarea, t.IdTipoTarea, t.FechaInicio, t.FechaFin, t.Descripción 
+                                FROM tareas t, tareaUsuario p 
+                                WHERE p.IdUsuario=" . $_SESSION['IdUsuario'] . " AND p.IdTarea=t.IdTarea 
+                                AND (
+                                    t.FechaInicio BETWEEN DATE(NOW()) AND DATE_SUB(DATE(NOW()), INTERVAL WEEKDAY(NOW()) DAY) 
+                                    OR t.FechaFin BETWEEN DATE(NOW()) AND DATE_SUB(DATE(NOW()), INTERVAL WEEKDAY(NOW()) - 6 DAY)
+                                )
+                                ";
                         $result2 = mysqli_query($conn, $sql2);
 
                         $num_filas = mysqli_num_rows($result2);
@@ -171,14 +175,16 @@ if ($_SESSION['Rol'] == 'cliente') {
 
                     </div>
                 </div>
-
+                <hr class="star-light">
                 <div class="row justify-content-center mt-5">
                     <div class="col">
                         <h2>Actualmente a los integrantes del piso les debes:<?php //Aqui va un input de lo que debes a los demas 
                                                                                 ?></h2>
                     </div>
                 </div>
+                <hr class="star-light">
 
+                <!--
                 <div class="row justify-content-center mt-2">
                     <div class="col-8">
                         <div class="row justify-content-center">
@@ -195,7 +201,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                         </div>
                     </div>
                 </div>
-
+                    -->
 
                 <div class="row justify-content-center mt-2">
                     <div class="col-8">
