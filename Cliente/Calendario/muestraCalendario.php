@@ -83,11 +83,29 @@ if ($_SESSION['Rol'] == 'cliente') {
                 <a class="navbar-brand js-scroll-trigger" href="../index.php"><i style="color:white" class="fa fa-home fa-2x" aria-hidden="true"></i>ContrePisos</a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1"></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#">Calendario</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="">Deudas</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="">Modificar</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="../../Conexion/desconexion.php">Salir</a></li>
+                        <li class="nav-item mx-0 mx-lg-1">
+                            <div class="nav-item dropdown mt-2">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Actividades
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="../Calendario/muestraCalendario.php">Calendario Grupal</a>
+                                    <a class="dropdown-item" href="">Calendario Personal</a>
+                                    <a class="dropdown-item" href="">Cuentas</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item mx-0 mx-lg-1">
+                            <div class="nav-item dropdown mt-2">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Perfil
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="">Modificar</a>
+                                    <a class="dropdown-item" href="../../Conexion/desconexion.php">Salir</a>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -159,7 +177,7 @@ if ($_SESSION['Rol'] == 'cliente') {
 
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<div class='form-check'>";
-                                        if ($row['Nombre']) {
+                                        if (!isset($row['Nombre'])) {
                                             echo "<input type='checkbox' class='form-check-input' id='" . $row['IdUsuario'] . "' name='usuarios[]' value='" . $row['IdUsuario'] . "'>";
                                             echo "<label class='form-check-label' for='" . $row['IdUsuario'] . "'>" . $row['Email'] . "</label>";
                                         } else {

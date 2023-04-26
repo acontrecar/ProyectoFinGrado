@@ -1,36 +1,66 @@
-mapboxgl.accessToken = 'TU_ACCESS_TOKEN';
-var map = new mapboxgl.Map({
-container: 'map',
-style: 'mapbox://styles/mapbox/streets-v11',
-center: [-74.5, 40], // longitud, latitud
-zoom: 9
-});
+<!DOCTYPE html>
+<html lang="en">
 
-var direccion = 'Nombre de la calle, Ciudad';
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.js'></script>
 
-// Utiliza la API de geocodificación de Mapbox para obtener la ubicación de la calle
-$.ajax({
-url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + direccion + '.json?access_token=' + mapboxgl.accessToken,
-method: 'GET',
-dataType: 'json',
-success: function(response) {
-// La respuesta contiene un arreglo de resultados de geocodificación
-var features = response.features;
-if (features.length > 0) {
-// Toma la primera ubicación resultante
-var ubicacion = features[0].center;
-// Mueve el mapa a la ubicación resultante
-map.setCenter(ubicacion);
-// Agrega un marcador en la ubicación resultante
-new mapboxgl.Marker()
-.setLngLat(ubicacion)
-.addTo(map);
-} else {
-// No se encontró ninguna ubicación resultante
-console.log('No se encontró ninguna ubicación para ' + direccion);
-}
-},
-error: function(response) {
-console.log('Error al geocodificar ' + direccion);
-}
-});
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css"
+        type="text/css">
+</head>
+
+<body>
+    Analizando la dirección: <b>Calle Sol, Jerez de la Frontera</b>
+    <div id="map"></div>
+</body>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY29udHJlY2FyNyIsImEiOiJjbGFtOHg5aGEwZHp0M3lvYmNndDI3aWthIn0.3GGG77kdGhe9iJS6JP-DQw';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [-74.5, 40], // longitud, latitud
+        zoom: 9
+    });
+
+    var direccion = 'Calle Sol, Jerez de la Frontera';
+
+    // Utiliza la API de geocodificación de Mapbox para obtener la ubicación de la calle
+    $.ajax({
+        url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + direccion + '.json?access_token=' + mapboxgl.accessToken,
+        method: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            // La respuesta contiene un arreglo de resultados de geocodificación
+            var features = response.features;
+            if (features.length > 0) {
+                // Toma la primera ubicación resultante
+                var ubicacion = features[0].center;
+                // Mueve el mapa a la ubicación resultante
+                map.setCenter(ubicacion);
+                // Agrega un marcador en la ubicación resultante
+                new mapboxgl.Marker()
+                    .setLngLat(ubicacion)
+                    .addTo(map);
+            } else {
+                // No se encontró ninguna ubicación resultante
+                console.log('No se encontró ninguna ubicación para ' + direccion);
+            }
+        },
+        error: function (response) {
+            console.log('Error al geocodificar ' + direccion);
+        }
+    });
+</script>
+
+</html>

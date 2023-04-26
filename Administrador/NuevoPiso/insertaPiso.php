@@ -68,14 +68,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_SESSION['Rol'] == 'administrador')
                 $header .=
                     "X-Mailer: PHP/" . phpversion();
                 $emails = $_POST['emails'];
+
                 foreach ($emails as $email) {
+                    $partes = explode('@', $email);
+                    $nombreProvisionalUsuario = $partes[0];
                     $password = generarContrasena();
                     $claveCifrada = md5($password);
-                    $sql3 = "INSERT INTO usuarios VALUES ('0','$id_piso','$email', $claveCifrada','0','0','cliente',' ')";
+                    $sql3 = "INSERT INTO usuarios VALUES ('0','$id_piso','$email', '$claveCifrada','0','0','cliente','$nombreProvisionalUsuario')";
                     if (mysqli_query($conn, $sql3)) {
                         mail($email, 'Tu contraseña', 'Aquí tu contraseña inicial: ' . $password, $header);
                     } else {
-                        $_SESSION['errores'] = "Error al insertar el usuario" . mysqli_error($conn);
+                        $_SESSION['errores'] = "Error al insertar el usuario qurey:" . $sql3;
                     }
                 }
 
