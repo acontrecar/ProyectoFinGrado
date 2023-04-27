@@ -14,12 +14,7 @@ if ($_SESSION['Rol'] == 'cliente') {
     if (mysqli_num_rows($result1) > 0) {
         while ($row = mysqli_fetch_assoc($result1)) {
             $nombrePiso = $row["NombrePiso"];
-            $lat
-                = $row["Latitud"];
-            $long =
-                $row["Longitud"];
-            $nombreCalle
-                = $row["NombreCalle"];
+            $direccion = $row["Direccion"];
         }
     }
 ?>
@@ -31,23 +26,18 @@ if ($_SESSION['Rol'] == 'cliente') {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Home - Brand</title>
+        <title>Inicio-Cliente</title>
+        <link rel="icon" type="image/x-icon" href="../favicon.ico">
         <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&amp;display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&amp;display=swap">
         <link rel="stylesheet" href="../assets/fonts/font-awesome.min.css">
         <link rel="stylesheet" href="../assets/bootstrap/css/styles.css">
         <link rel="stylesheet" href="../assets/bootstrap/css/Login-Form-Basic-icons.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.js'></script>
-
-
-        <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
-        <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
-
-        <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
-        <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css" type="text/css">
-        <!--a fa-calculator-->
-
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.css' rel='stylesheet' />
         <style>
             @media (max-width: 480px) {
                 .table {
@@ -62,7 +52,7 @@ if ($_SESSION['Rol'] == 'cliente') {
     <body>
         <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="../index.html"><i style="color:white" class="fa fa-home fa-2x" aria-hidden="true"></i>ContrePisos</a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                <a class="navbar-brand js-scroll-trigger mw-25" href="../index.html"><img class="navbar-bar" src="../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item mx-0 mx-lg-1">
@@ -184,30 +174,11 @@ if ($_SESSION['Rol'] == 'cliente') {
                 </div>
                 <hr class="star-light">
 
-                <!--
-                <div class="row justify-content-center mt-2">
-                    <div class="col-8">
-                        <div class="row justify-content-center">
-                            <div class="col-8">
-                                <div class="p-3 mb-3">
-                                    <h2>
-                                        <a href="Cuentas/paginaCuentas.php" class="text-decoration-none" style="color: white;">
-                                            <i class="fa fa-folder-o pr-2" aria-hidden="true"></i>
-                                            Cuentas
-                                        </a>
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    -->
-
                 <div class="row justify-content-center mt-2">
                     <div class="col-8">
                         <div class="mb-3 p-3">
                             <div id='map' style='width: 100%; height: 400px;'></div>
-                            <p><?php echo $nombreCalle ?></p>
+                            <p><?php echo $direccion ?></p>
                         </div>
                     </div>
                 </div>
@@ -216,44 +187,48 @@ if ($_SESSION['Rol'] == 'cliente') {
         </header>
 
         <script>
-            mapboxgl.accessToken = 'pk.eyJ1IjoiY29udHJlY2FyNyIsImEiOiJjbGFtOHg5aGEwZHp0M3lvYmNndDI3aWthIn0.3GGG77kdGhe9iJS6JP-DQw';
+            $(document).ready(function() {
+                // Crea un nuevo mapa de Mapbox en el elemento con el ID "map"
+                mapboxgl.accessToken = 'pk.eyJ1IjoiY29udHJlY2FyNyIsImEiOiJjbGFtOHg5aGEwZHp0M3lvYmNndDI3aWthIn0.3GGG77kdGhe9iJS6JP-DQw';
+                var map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [-74.5, 40],
+                    zoom: 13
+                });
 
-            var map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/streets-v11',
-                center: [<?php echo $long ?>, <?php echo $lat ?>],
-                zoom: 13
-            });
+                // Obtiene la dirección del usuario desde PHP
+                var direccion = '<?php echo $direccion; ?>';
 
-            var marker = new mapboxgl.Marker()
-                .setLngLat([<?php echo $long ?>, <?php echo $lat ?>])
-                .addTo(map);
-
-            map.on('click', function(e) {
-                var long = e.lngLat.lng;
-                var lat = e.lngLat.lat;
-                console.log('Longitud: ' + long + ' | Latitud: ' + lat);
-                // Aquí puedes hacer lo que quieras con las variables long y lat
-            });
-
-            map.addControl(
-                new mapboxgl.GeolocateControl({
-                    positionOptions: {
-                        enableHighAccuracy: true,
+                // Utiliza la API de geocodificación de Mapbox para obtener la ubicación de la calle
+                $.ajax({
+                    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + direccion + '.json?access_token=' + mapboxgl.accessToken,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        // La respuesta contiene un arreglo de resultados de geocodificación
+                        var features = response.features;
+                        if (features.length > 0) {
+                            // Toma la primera ubicación resultante
+                            var ubicacion = features[0].center;
+                            // Mueve el mapa a la ubicación resultante
+                            map.setCenter(ubicacion);
+                            // Agrega un marcador en la ubicación resultante
+                            new mapboxgl.Marker()
+                                .setLngLat(ubicacion)
+                                .addTo(map);
+                        } else {
+                            alert("Error al geocodificar " + direccion);
+                            // No se encontró ninguna ubicación resultante
+                            console.log('No se encontró ninguna ubicación para ' + direccion);
+                        }
                     },
-                    // When active the map will receive updates to the device's location as it changes.
-                    trackUserLocation: true,
-                    // Draw an arrow next to the location dot to indicate which direction the device is heading.
-                    showUserHeading: true,
-                })
-            );
-
-            map.addControl(
-                new MapboxDirections({
-                    accessToken: mapboxgl.accessToken
-                }),
-                'top-left'
-            );
+                    error: function(response) {
+                        console.log('Error al geocodificar ' + direccion);
+                        alert("Error al geocodificar " + direccion);
+                    }
+                });
+            });
         </script>
 
 

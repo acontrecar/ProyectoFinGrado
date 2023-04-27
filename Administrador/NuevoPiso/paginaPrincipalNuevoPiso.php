@@ -22,7 +22,8 @@ if ($_SESSION['Rol'] == 'administrador') {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Home - Brand</title>
+        <title>Admin-NuevoPiso</title>
+        <link rel="icon" type="image/x-icon" href="../../favicon.ico">
         <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&amp;display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&amp;display=swap">
@@ -31,10 +32,17 @@ if ($_SESSION['Rol'] == 'administrador') {
         <link rel="stylesheet" href="../../assets/bootstrap/css/Login-Form-Basic-icons.css">
 
 
-        <!--MapBox-->
-        <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
-        <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.css' rel='stylesheet' />
 
+
+        <style>
+            #map {
+                height: 400px;
+                width: 100%;
+            }
+        </style>
     </head>
 
     <body>
@@ -43,9 +51,16 @@ if ($_SESSION['Rol'] == 'administrador') {
                 <a class="navbar-brand js-scroll-trigger" href="../index.php"><i style="color:white" class="fa fa-home fa-2x" aria-hidden="true"></i>ContrePisos</a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1"></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="login.html">login</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="Registro/">singup</a></li>
+                        <li class="nav-item mx-0 mx-lg-1">
+                            <div class="nav-item dropdown mt-2">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Perfil
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="../../Conexion/desconexion.php">Salir</a>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -57,38 +72,19 @@ if ($_SESSION['Rol'] == 'administrador') {
             <div class="container">
                 <form method="POST" action="insertaPiso.php" enctype="multipart/form-data">
                     <div class="form-group text-center">
-                        <label for="imagen">Imagen del piso*</label>
-                        <div class="position-relative">
-                            <div class="rounded-circle overflow-hidden d-inline-block">
-                                <img src="../../assets/img/pisoIcono.png" alt="Imagen" class="w-25" id="img-input">
-                            </div>
-                            <input type="file" accept="image/*" hidden class="form-control-file position-absolute h-100 w-100" name="imagen" id="imagen">
-                            <?php if (isset($error)) : ?>
-                                <p style="color: red;"><?php echo $error; ?></p>
-                            <?php endif; ?>
-                            <?php if (isset($correcto)) : ?>
-                                <p style="color: green;"><?php echo $correcto; ?></p>
-                            <?php endif; ?>
-                        </div>
+                        <h4>Primero deberás de ubicar el piso con ese formulario:<br>
+                            (Asegurate de que la ubicación sea correcta)
+                        </h4>
+                        <label for="direccion">Dirección:</label>
+                        <input style="width: 60%;" type="text" id="direccion" name="direccion" required placeholder="Calle Sol, Guadalcacín, Jerez de la Frontera, Andalucía, España">
+                        <button id="buscaUbicacion" class="btn btn-light">Buscar</button>
+
+                        <div id="map" style="margin-top: 1%;"></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="latitud">Latitud del piso*</label>
-                            <input type="number" step="any" required class="form-control" name="latitud" id="latitud">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="longitud">Logintud del piso*</label>
-                            <input type="number" step="any" required class="form-control" name="longitud" id="longitud">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="nombreCalle">Nombre de la calle*</label>
-                            <input type="text" class="form-control" name="nombreCalle" require id="nombreCalle">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="nombrePiso">Nombre del piso</label>
-                            <input type="text" class="form-control" required name="nombrePiso" id="nombrePiso">
+                        <div class="form-group col">
+                            <label for="nombrePiso">Nombre del piso* (Para poder referenciarlo)</label>
+                            <input type="text" class="form-control" required name="nombrePiso" id="nombrePiso" require>
                         </div>
                     </div>
 
@@ -97,47 +93,35 @@ if ($_SESSION['Rol'] == 'administrador') {
                     </div>
 
                     <div class="form-group">
-                        <button type="button" class="btn btn-primary" id="btn-anadir-campos">Añadir campos</button>
+                        <button type="button" class="btn btn-primary" id="btn-anadir-campos">Añadir usuarios</button>
                     </div>
 
                     <button type="submit" class="btn btn-success">Enviar</button>
+
+                    <?php
+                    if (isset($error)) {
+                    ?>
+                        <div class="col-sm-12 mt-3">
+                            <div id="passwordError" style="color:red; font-style: italic;">
+                                <?php
+                                echo $error;
+                                ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <?php
+                    if (isset($correcto)) {
+                    ?>
+                        <div class="col-sm-12 mt-3">
+                            <div id="passwordError" style="color:green; font-style: italic;">
+                                <?php
+                                echo $correcto;
+                                ?>
+                            </div>
+                        </div>
+                    <?php } ?>
                 </form>
-
-
-                <script>
-                    const imgInput = document.getElementById('img-input');
-                    const fileInput = document.getElementById('imagen');
-
-                    imgInput.addEventListener('click', () => {
-                        fileInput.click();
-                    });
-
-                    var contadorCampos = 0;
-                    var maxCampos = 5; // Máximo de campos adicionales permitidos
-
-                    // Función para añadir los campos adicionales
-                    document.getElementById('btn-anadir-campos').addEventListener("click", anadirCampos);
-
-                    function anadirCampos(event) {
-
-                        if (contadorCampos < maxCampos) {
-                            contadorCampos++;
-                            var nuevoCampo = `<div class="form-row">
-                            <div class="col-md-3"></div>
-                    <div class="form-group col-md-6">
-                        <label for="email${contadorCampos}">Email ${contadorCampos}</label>
-                        <input type="email" class="form-control" name="emails[]" id="email${contadorCampos}">
-                    </div>`;
-                            document.getElementById('campos-adicionales').innerHTML += nuevoCampo;
-                            event.preventDefault();
-                        } else {
-                            alert('Solo se permite ingresar 5 usuarios');
-                            event.preventDefault();
-                        }
-                    }
-                </script>
-
-
             </div>
         </header>
 
@@ -163,6 +147,145 @@ if ($_SESSION['Rol'] == 'administrador') {
                 </div>
             </div>
         </footer>
+
+
+
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoiY29udHJlY2FyNyIsImEiOiJjbGFtOHg5aGEwZHp0M3lvYmNndDI3aWthIn0.3GGG77kdGhe9iJS6JP-DQw';
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [-74.5, 40],
+                zoom: 13
+            });
+
+            $('#buscaUbicacion').click(function(event) {
+                event.preventDefault();
+                var direccion = $('#direccion').val();
+                // Utiliza la API de geocodificación de Mapbox para obtener la ubicación de la calle
+                $.ajax({
+                    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + direccion + '.json?access_token=' + mapboxgl.accessToken,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        // La respuesta contiene un arreglo de resultados de geocodificación
+                        var features = response.features;
+                        if (features.length > 0) {
+                            // Toma la primera ubicación resultante
+                            var ubicacion = features[0].center;
+                            // Mueve el mapa a la ubicación resultante
+                            map.setCenter(ubicacion);
+                            // Agrega un marcador en la ubicación resultante
+                            new mapboxgl.Marker()
+                                .setLngLat(ubicacion)
+                                .addTo(map);
+                        } else {
+                            alert("Error al geocodificar " + direccion);
+                            // No se encontró ninguna ubicación resultante
+                            console.log('No se encontró ninguna ubicación para ' + direccion);
+                        }
+                    },
+                    error: function(response) {
+                        console.log('Error al geocodificar ' + direccion);
+                        alert("Error al geocodificar " + direccion);
+                    }
+                });
+            });
+
+
+            let emailsBBDD = [];
+
+            // Cargo los emails de la base de datos para comprobarlo
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var emails = JSON.parse(this.responseText);
+
+                    emails.forEach(element => {
+                        emailsBBDD.push(element);
+                    });
+
+                    // console.log(emailsBBDD);
+
+                }
+            };
+            xhttp.open("GET", "buscaEmail.php", true);
+            xhttp.send();
+
+
+            var contadorCampos = 0;
+            var maxCampos = 5; // Máximo de campos adicionales permitidos
+
+            // Función para añadir los campos adicionales
+            document.getElementById('btn-anadir-campos').addEventListener("click", anadirCampos);
+
+            function anadirCampos(event) {
+
+                if (contadorCampos < maxCampos) {
+                    contadorCampos++;
+                    if (contadorCampos >= 2) {
+                        var nuevoCampo = `<div class="form-row">
+                            <div class="col-md-3"></div>
+                    <div class="form-group col-md-6">
+                        <label for="email${contadorCampos}">Email ${contadorCampos}</label>
+                        <input type="email" class="form-control" name="emails[]" id="email${contadorCampos}" onkeyup="comprobarEmail(this)" value="${document.getElementById(`email${contadorCampos-1}`).value}"
+>
+                    <span></span>
+                    </div>
+                    `;
+                    } else {
+                        var nuevoCampo = `<div class="form-row">
+                            <div class="col-md-3"></div>
+                    <div class="form-group col-md-6">
+                        <label for="email${contadorCampos}">Email ${contadorCampos}</label>
+                        <input type="email" class="form-control" name="emails[]" id="email${contadorCampos}" onkeyup="comprobarEmail(this)" >
+                    <span></span>
+                    </div>
+                    `;
+                    }
+
+                    document.getElementById('campos-adicionales').innerHTML += nuevoCampo;
+                    event.preventDefault();
+                } else {
+                    alert('Solo se permite ingresar 5 usuarios');
+                    event.preventDefault();
+                }
+            }
+
+
+
+            //Función para comprobar que los emails no se repiten en la bbdd
+            function comprobarEmail(campo) {
+                const correoElectronico = campo.value;
+
+                //console.log(campo)
+
+                const encontrado = emailsBBDD.includes(correoElectronico);
+
+                const span = campo.parentElement.querySelector("span");
+
+                // Actualizar el contenido del elemento span con el resultado de la verificación
+                if (encontrado) {
+                    span.textContent = "Este correo electrónico ya existe";
+                    span.style.color = "red";
+                } else {
+                    span.textContent = "Correo electrónico válido";
+                    span.style.color = "green";
+                }
+            }
+
+            // Agregar evento oninput a los campos de correo electrónico
+            const camposCorreoElectronico = document.querySelectorAll('input[type="email"]');
+            camposCorreoElectronico.forEach((campo) => {
+                campo.addEventListener("input", () => {
+                    comprobarEmail(campo);
+                });
+
+                // Agregar elemento span para mostrar el resultado de la verificación
+                const span = document.createElement("span");
+                campo.parentElement.appendChild(span);
+            });
+        </script>
 
         <script src="../../assets/js/jquery.min.js"></script>
         <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>

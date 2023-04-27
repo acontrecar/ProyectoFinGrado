@@ -6,93 +6,81 @@ if (!isset($_SESSION['IdUsuario']) && $_SESSION['Rol'] != 'cliente') {
     exit();
 }
 
-$existen_errores = 0;
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $_SESSION['erroresPassword'] = "";
-    $_SESSION['erroresNombre'] = "";
-    $_SESSION['erroresEmail'] = "";
-
-
-    $IdUsuario = $_POST["IdUsuario"];
-    $nombre = $_POST["nombre"];
-    $email = $_POST["email"];
-    $StringContraseña = $_POST["contraseña"];
+    $IdUsuario = isset($_POST["IdUsuario"]) ? $_POST["IdUsuario"] : "";
+    $nombre = isset($_POST["nombre"]) ? $_POST["nombre"] : "";
+    $StringContraseña = isset($_POST["contraseña"]) ? $_POST["contraseña"] : "";
 
     $errores = false;
 
     $ContraseñaErr = "";
     $nombreErr = "";
     $RepiteContraseñaErr = "";
-    $EmailErr = "";
     $mayuscula = false;
     $numero = false;
     $contraseñaCifrada = "";
 
-    for ($i = 0; $i < strlen($StringContraseña); $i++) {
-        if ($StringContraseña[$i] == strtoupper($StringContraseña[$i])) {
-            $mayuscula = true;
+    if (!isset($_POST["contraseña"]) && !isset($_POST["contraseña2"])) {
+        echo 'entra';
+        for ($i = 0; $i < strlen($StringContraseña); $i++) {
+            if ($StringContraseña[$i] == strtoupper($StringContraseña[$i])) {
+                $mayuscula = true;
+            }
+            if (is_numeric($StringContraseña[$i])) {
+                $numero = true;
+            }
         }
-        if (is_numeric($StringContraseña[$i])) {
-            $numero = true;
-        }
-    }
-    if ($mayuscula != true || $numero != true) {
-        $_SESSION['erroresPassword'] = "La contraseña debe tener 1 mayúscula y 1 número.";
-        $errores = true;
-    } else {
-        if (strcmp(($_POST["contraseña"]), ($_POST["contraseña2"])) != 0) {
+        if ($mayuscula != true || $numero != true) {
+            $_SESSION['erroresPassword'] = "La contraseña debe tener 1 mayúscula y 1 número.";
             $errores = true;
-            $_SESSION['erroresPassword'] = "Las contraseñas deben coincidir";
         } else {
-            $contraseñaCifrada = test_input($_POST["contraseña"]);
-            $contraseñaCifrada = md5($contraseñaCifrada);
+            if (strcmp(($_POST["contraseña"]), ($_POST["contraseña2"])) != 0) {
+                $errores = true;
+                $_SESSION['erroresPassword'] = "Las contraseñas deben coincidir";
+            } else {
+                $contraseñaCifrada = test_input($_POST["contraseña"]);
+                $contraseñaCifrada = md5($contraseñaCifrada);
+            }
         }
     }
 
-    if (!preg_match('/^[A-Za-zá-ú Á-Ú]{1,30}$/', $nombre)) {
+    if (isset($nombre) && !preg_match('/^[A-Za-zá-ú Á-Ú]{1,30}$/', $nombre)) {
         $_SESSION['erroresNombre'] = "Introduzca un nombre con formato valido";
         $errores = true;
     }
 
-    if (!preg_match('/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/', $email)) {
-        $_SESSION['erroresEmail'] = "Introduzca un email con formato valido";
-        $errores = true;
-    }
-
     if ($errores) {
-        echo "<script>
-    alert('Existen errores en el formulario y no se ha podido modificar el usuario');
-    window.location.href='./modificar.php'
-    </script>";
+        // echo "<script>
+        //     alert('Existen errores en el formulario y no se ha podido modificar el usuario');
+        //     window.location.href='./modificar.php'
+        // </script>";
+        // exit();
     } else {
-        $sql = "UPDATE usuarios";
-
-        $CLAUSES = array();
-
-        if (strlen($nombre) != 0) {
-            $CLAUSES[] = 'Nombre = "' . $nombre . '"';
-        }
-        if (strlen($email) != 0) {
-            $CLAUSES[] = 'Email = "' . $email . '"';
-        }
-        if (strlen($contraseñaCifrada) != 0) {
-            $CLAUSES[] = 'Clave = "' . $contraseñaCifrada . '"';
-        }
-        if (count($CLAUSES) > 0) {
-            $sql .= ' SET ' . implode(' , ', $CLAUSES) . ' WHERE IdUsuario="' . $IdUsuario . '" ';
+        if (isset($_POST["contraseña"]) && isset($_POST["contraseña2"])) {
+            $sql = "UPDATE usuarios SET Clave='$contraseñaCifrada' WHERE IdUsuario='$IdUsuario'";
+            mysqli_query($conn, $sql);
         }
 
+        if (isset($nombre)) {
+            $sql = "UPDATE usuarios SET Nombre='$nombre' WHERE IdUsuario='$IdUsuario'";
+            mysqli_query($conn, $sql);
+        }
 
-        mysqli_query($conn, $sql);
-        echo "<script>
-    alert('Se ha modificado el usuario correctamente');
-    window.location.href='./modificar.php'
-    </script>";
+        if (isset($_POST["contraseña"]) || isset($nombre)) {
+            echo "<script>
+                alert('Se ha modificado el usuario correctamente');
+                window.location.href='./modificar.php'
+            </script>";
+        } else {
+            echo "<script>
+                alert('No se ha modificado nada');
+                window.location.href='./modificar.php'
+            </script>";
+        }
+        exit();
     }
 }
-
 
 function test_input($data)
 {

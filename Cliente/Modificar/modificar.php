@@ -12,7 +12,8 @@ if ($_SESSION['Rol'] == 'cliente') {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Home - Brand</title>
+        <title>ContrePisos-Modificar</title>
+        <link rel="icon" type="image/x-icon" href="../../favicon.ico">
         <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&amp;display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&amp;display=swap">
@@ -37,8 +38,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="../Calendario/muestraCalendario.php">Calendario Grupal</a>
-                                    <a class="dropdown-item" href="">Calendario Personal</a>
-                                    <a class="dropdown-item" href="">Cuentas</a>
+                                    <a class="dropdown-item" href="../Cuentas/paginaCuentas.php">Cuentas</a>
                                 </div>
                             </div>
                         </li>
@@ -93,7 +93,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                         <div class="col-md-12 col-lg-12 col-xl-12">
                                             <div class="card mb-5">
                                                 <div class="card-body d-flex flex-column align-items-center">
-                                                    <form action="confirmacion.php" class="text-center" method="post">
+                                                    <form action="confirmacion2.php" class="text-center" method="post">
                                                         <div class="form-group row mt-3">
                                                             <div class="col-sm-12">
                                                                 <label class="text-secondary" for="nombre">Nombre:</label>
@@ -117,7 +117,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                                         <div class="form-group row mt-3">
                                                             <div class="col-sm-12">
                                                                 <label class="text-secondary" for="email">Email:</label>
-                                                                <input type="text" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" id="email" name="email" placeholder="Email" value="<?php echo $reg['Email'] ?>">
+                                                                <input type="text" class="form-control" disabled pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" id="email" name="email" placeholder="Email" value="<?php echo $reg['Email'] ?>">
                                                             </div>
 
                                                             <?php

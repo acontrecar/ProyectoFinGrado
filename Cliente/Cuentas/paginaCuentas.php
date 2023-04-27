@@ -38,7 +38,8 @@ if ($_SESSION['Rol'] == 'cliente') {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Home - Brand</title>
+        <title>ContrePisos-Cuentas</title>
+        <link rel="icon" type="image/x-icon" href="../../favicon.ico">
         <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&amp;display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&amp;display=swap">
@@ -77,8 +78,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="../Calendario/muestraCalendario.php">Calendario Grupal</a>
-                                    <a class="dropdown-item" href="">Calendario Personal</a>
-                                    <a class="dropdown-item" href="">Cuentas</a>
+                                    <a class="dropdown-item" href="#">Cuentas</a>
                                 </div>
                             </div>
                         </li>
