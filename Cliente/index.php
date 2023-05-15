@@ -19,7 +19,6 @@ if ($_SESSION['Rol'] == 'cliente') {
     }
 ?>
 
-
     <!DOCTYPE html>
     <html lang="en">
 
@@ -38,6 +37,9 @@ if ($_SESSION['Rol'] == 'cliente') {
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.js'></script>
         <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.css' rel='stylesheet' />
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
         <style>
             @media (max-width: 480px) {
                 .table {
@@ -168,10 +170,58 @@ if ($_SESSION['Rol'] == 'cliente') {
                 <hr class="star-light">
                 <div class="row justify-content-center mt-5">
                     <div class="col">
-                        <h2>Actualmente a los integrantes del piso les debes:<?php //Aqui va un input de lo que debes a los demas 
-                                                                                ?></h2>
+                        <h2>
+                            <?php //Aqui va un input de lo que debes a los demas
+
+                            $id = $_SESSION['IdUsuario'];
+
+                            // $sql4 = "SELECT c.IdCuenta, tc.NombreCuenta,c.Cantidad, ud.Nombre as NombreDeudor, ua.Nombre as NombreAcreedor, c.FechaDeuda, c.Descripción 
+                            // FROM cuentas c 
+                            // INNER JOIN tipoCuenta tc ON c.IdTipoCuenta = tc.IdTipoCuenta 
+                            // INNER JOIN usuarios ud ON c.IdUsuarioDeudor = ud.IdUsuario 
+                            // INNER JOIN usuarios ua ON c.IdUsuarioAcreedor = ua.IdUsuario 
+                            // WHERE c.IdUsuarioAcreedor != '$id'
+                            // and c.IdUsuarioDeudor = '$id'
+                            // ORDER BY c.FechaDeuda DESC";
+
+                            //Sql de dinero debido
+                            $sql4 = "SELECT ua.Nombre as NombreAcreedor, SUM(c.Cantidad) as DeudaTotal
+                            FROM cuentas c 
+                            INNER JOIN usuarios ud ON c.IdUsuarioDeudor = ud.IdUsuario 
+                            INNER JOIN usuarios ua ON c.IdUsuarioAcreedor = ua.IdUsuario 
+                            WHERE c.IdUsuarioAcreedor != '$id' and c.IdUsuarioDeudor = '$id'
+                            GROUP BY ua.Nombre
+                            ORDER BY ua.Nombre ASC
+                            ";
+
+                            $result4 = mysqli_query($conn, $sql4);
+                            if ($reg4 = mysqli_fetch_array($result4)) {
+                                mysqli_data_seek($result4, 0);
+                                echo "Actualmente a los integrantes del piso les debes:";
+                                while ($reg4 = mysqli_fetch_array($result4)) {
+                                    echo "<br>" . $reg4['NombreAcreedor'] . ": " . $reg4['DeudaTotal'] . "€";
+                                }
+                            } else {
+                                echo "No debes nada!";
+                            }
+                            ?>
+                        </h2>
                     </div>
                 </div>
+                <hr class="star-light">
+
+
+                <div class="row justify-content-center mt-5">
+                    <div class="col">
+                        <p>Gastos de tipo:</p>
+                        <canvas id="grafico1"></canvas>
+                    </div>
+                    <div class="col">
+                        <p>Deber a usuario</p>
+                        <canvas id="grafico2"></canvas>
+                    </div>
+                </div>
+
                 <hr class="star-light">
 
                 <div class="row justify-content-center mt-2">
@@ -186,7 +236,95 @@ if ($_SESSION['Rol'] == 'cliente') {
             </div>
         </header>
 
+        <?php
+        //Sacar los datos de la base de datos para el grafico 1
+        $sql5 = "SELECT tc.NombreCuenta, SUM(c.Cantidad) as SumaCuenta 
+        FROM cuentas c 
+        INNER JOIN tipoCuenta tc ON c.IdTipoCuenta = tc.IdTipoCuenta
+        WHERE c.IdUsuarioDeudor = '$id' OR c.IdUsuarioAcreedor = '$id'
+        GROUP BY c.IdTipoCuenta
+        ";
+
+        $result5 = mysqli_query($conn, $sql5);
+        $reg5 = mysqli_fetch_array($result5);
+        mysqli_data_seek($result5, 0);
+
+        while ($reg5 = mysqli_fetch_array($result5)) {
+            $nombreCuenta[] = $reg5['NombreCuenta'];
+            $sumaCuenta[] = $reg5['SumaCuenta'];
+        }
+
+
+        //Sacar los datos de la base de datos para el grafico 2
+        $sql6 = "SELECT ua.Nombre as NombreAcreedor, tc.NombreCuenta as TipoDeuda, SUM(c.Cantidad) as DeudaTotal
+        FROM cuentas c 
+        INNER JOIN usuarios ud ON c.IdUsuarioDeudor = ud.IdUsuario 
+        INNER JOIN usuarios ua ON c.IdUsuarioAcreedor = ua.IdUsuario 
+        INNER JOIN tipoCuenta tc ON c.IdTipoCuenta = tc.IdTipoCuenta
+        WHERE c.IdUsuarioAcreedor != '$id' and c.IdUsuarioDeudor = '$id'
+        GROUP BY ua.Nombre, tc.NombreCuenta
+        ORDER BY ua.Nombre ASC
+        ";
+
+        $result6 = mysqli_query($conn, $sql6);
+        $reg6 = mysqli_fetch_array($result6);
+        mysqli_data_seek($result6, 0);
+        while ($reg6 = mysqli_fetch_array($result6)) {
+            $nombreAcreedor[] = $reg6['NombreAcreedor'];
+            $tipoDeuda[] = $reg6['TipoDeuda'];
+            $deudaTotal[] = $reg6['DeudaTotal'];
+        };
+
+        ?>
+
+
         <script>
+            //Grafico 1 donde muestre el dinero que te has gastado en cada tipo de gasto cogiendolos de la base de datos
+
+            var ctx1 = document.getElementById('grafico1').getContext('2d');
+            var myChart1 = new Chart(ctx1, {
+                type: 'pie',
+                data: {
+                    labels: <?php echo json_encode($nombreCuenta); ?>,
+                    datasets: [{
+                        label: 'Gastos (€): ',
+                        data: <?php echo json_encode($sumaCuenta); ?>,
+                        backgroundColor: [
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+
+            var ctx2 = document.getElementById('grafico2').getContext('2d');
+            var myChart2 = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: ['Etiqueta1', 'Etiqueta2', 'Etiqueta3'],
+                    datasets: [{
+                        label: 'Gastos (€)',
+                        data: [5, 15, 25],
+                        backgroundColor: [
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+
+
+
+
+
             $(document).ready(function() {
                 // Crea un nuevo mapa de Mapbox en el elemento con el ID "map"
                 mapboxgl.accessToken = 'pk.eyJ1IjoiY29udHJlY2FyNyIsImEiOiJjbGFtOHg5aGEwZHp0M3lvYmNndDI3aWthIn0.3GGG77kdGhe9iJS6JP-DQw';

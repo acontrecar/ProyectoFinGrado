@@ -49,7 +49,7 @@ if ($_SESSION['Rol'] == 'administrador') {
                     <div class="col-8">
                         <div class="p-3 mb-3">
                             <h2>
-                                <a href="" class="text-decoration-none" style="color: white;">
+                                <a href="AdminPisos/crudPisos.php" class="text-decoration-none" style="color: white;">
                                     <i class="fa fa-folder-o pr-2" aria-hidden="true"></i>
                                     Administrar pisos
                                 </a>
