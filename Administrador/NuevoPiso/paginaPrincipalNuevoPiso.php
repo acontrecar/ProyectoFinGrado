@@ -48,7 +48,7 @@ if ($_SESSION['Rol'] == 'administrador') {
     <body>
         <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="../index.php"><i style="color:white" class="fa fa-home fa-2x" aria-hidden="true"></i>ContrePisos</a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                <a class="navbar-brand js-scroll-trigger mw-25" href="../index.php"><img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item mx-0 mx-lg-1">
@@ -152,6 +152,7 @@ if ($_SESSION['Rol'] == 'administrador') {
 
         <script>
             mapboxgl.accessToken = 'pk.eyJ1IjoiY29udHJlY2FyNyIsImEiOiJjbGFtOHg5aGEwZHp0M3lvYmNndDI3aWthIn0.3GGG77kdGhe9iJS6JP-DQw';
+
             var map = new mapboxgl.Map({
                 container: 'map',
                 style: 'mapbox://styles/mapbox/streets-v11',
@@ -159,9 +160,12 @@ if ($_SESSION['Rol'] == 'administrador') {
                 zoom: 13
             });
 
+            var marcador = null;
+
             $('#buscaUbicacion').click(function(event) {
                 event.preventDefault();
                 var direccion = $('#direccion').val();
+
                 // Utiliza la API de geocodificación de Mapbox para obtener la ubicación de la calle
                 $.ajax({
                     url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + direccion + '.json?access_token=' + mapboxgl.accessToken,
@@ -170,18 +174,25 @@ if ($_SESSION['Rol'] == 'administrador') {
                     success: function(response) {
                         // La respuesta contiene un arreglo de resultados de geocodificación
                         var features = response.features;
+
                         if (features.length > 0) {
                             // Toma la primera ubicación resultante
                             var ubicacion = features[0].center;
-                            // Mueve el mapa a la ubicación resultante
-                            map.setCenter(ubicacion);
+
+                            // Remueve el marcador anterior, si existe
+                            if (marcador !== null) {
+                                marcador.remove();
+                            }
+
                             // Agrega un marcador en la ubicación resultante
-                            new mapboxgl.Marker()
+                            marcador = new mapboxgl.Marker()
                                 .setLngLat(ubicacion)
                                 .addTo(map);
+
+                            // Mueve el mapa a la ubicación resultante
+                            map.setCenter(ubicacion);
                         } else {
                             alert("Error al geocodificar " + direccion);
-                            // No se encontró ninguna ubicación resultante
                             console.log('No se encontró ninguna ubicación para ' + direccion);
                         }
                     },
@@ -191,6 +202,7 @@ if ($_SESSION['Rol'] == 'administrador') {
                     }
                 });
             });
+
 
 
             let emailsBBDD = [];

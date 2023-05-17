@@ -3,6 +3,7 @@ session_start();
 
 if ($_SESSION['Rol'] == 'administrador') {
 
+
 ?>
 
 
@@ -57,7 +58,7 @@ if ($_SESSION['Rol'] == 'administrador') {
     <body>
         <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="../index.php"><i style="color:white" class="fa fa-home fa-2x" aria-hidden="true"></i>ContrePisos</a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                <a class="navbar-brand js-scroll-trigger mw-25" href="../index.php"><img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item mx-0 mx-lg-1">
@@ -77,7 +78,7 @@ if ($_SESSION['Rol'] == 'administrador') {
 
 
 
-        <header class="text-center text-white bg-primary masthead mt-4">
+        <header class="text-center text-white bg-primary masthead mt-4" style="min-height: 80vh;">
             <div class="container">
                 <h1>Listado de pisos</h1>
                 <ul class="list-group-propio">
@@ -94,7 +95,7 @@ if ($_SESSION['Rol'] == 'administrador') {
                             <a href="muestraInformacionPisos.php?piso_id=<?php echo $piso['IdPiso']; ?>">
                                 <h5><?php echo $piso['NombrePiso']; ?></h5>
                                 <p><?php echo $piso['Direccion']; ?></p>
-                                <small class="text-muted">DNI Propietario: <?php echo $piso['DNI']; ?></small>
+                                <small class=" text-muted">DNI Propietario: <?php echo $piso['DNI']; ?></small>
                             </a>
                         </li>
                     <?php
