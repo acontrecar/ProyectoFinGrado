@@ -122,7 +122,6 @@ if ($_SESSION['Rol'] == 'administrador' && isset($piso_id)) {
                                     $consulta = mysqli_query($conn, $sql);
 
                                     while ($fila = mysqli_fetch_array($consulta)) {
-                                        echo $fila['Nombre'];
                                     ?>
                                         <tr>
                                             <th scope="row"><?php echo $fila['IdUsuario'] ?></th>
@@ -171,6 +170,20 @@ if ($_SESSION['Rol'] == 'administrador' && isset($piso_id)) {
                     </div>
                 </div>
 
+
+                <div class="row mt-5">
+                    <?php
+                    if (isset($errores)) {
+                    ?>
+                        <div class="col-sm-12 mt-3">
+                            <div id="passwordError" style="color:red; font-style: italic;">
+                                <?php
+                                echo $errores;
+                                ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
 
 
             </div>

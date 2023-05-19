@@ -4,31 +4,15 @@ session_start();
 // Verifica si hay un mensaje de error almacenado en la sesión
 if ($_SESSION['Rol'] == 'cliente') {
 
-    if (isset($_SESSION['erroresAlimentos'])) {
-        $erroresAlimentos = $_SESSION['erroresAlimentos'];
-        unset($_SESSION['erroresAlimentos']);
-    }
-
-    if (isset($_SESSION['erroresLimpieza'])) {
-        $erroresLimpieza = $_SESSION['erroresLimpieza'];
-        unset($_SESSION['erroresLimpieza']);
-    }
-
-    if (isset($_SESSION['erroresOcio'])) {
-        $erroresOcio = $_SESSION['erroresOcio'];
-        unset($_SESSION['erroresOcio']);
-    }
-
     if (isset($_SESSION['correcto'])) {
         $correcto = $_SESSION['correcto'];
         unset($_SESSION['correcto']);
     }
 
-    if (isset($_SESSION['erroresGeneral'])) {
-        $erroresGeneral = $_SESSION['erroresGeneral'];
-        unset($_SESSION['erroresGeneral']);
+    if (isset($_SESSION['errores'])) {
+        $errores = $_SESSION['errores'];
+        unset($_SESSION['errores']);
     }
-
 ?>
 
 
@@ -102,156 +86,62 @@ if ($_SESSION['Rol'] == 'cliente') {
         <header class="text-center text-white bg-primary masthead mt-5">
             <div class="container" style="color: black;">
                 <form action="insertaCuentas.php" method="POST">
-
                     <div class="row">
-                        <div class="col-md-4 car-margin">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Alimentos</h5>
 
-                                    <div class="form-group">
-                                        <input type="number" min="0" step="0.01" class="form-control" id="alimentos" name="alimentos" placeholder="Cantidad gastada">
-                                    </div>
-                                    <div class="form-group">
-                                        <?php
-                                        require '../../Conexion/conexion.php';
-                                        $sql = "SELECT * FROM usuarios WHERE IdPiso=" . $_SESSION['IdPiso'] /*. " AND IdUsuario!=" . $_SESSION['IdUsuario']*/;
-                                        $result = mysqli_query($conn, $sql);
-                                        while ($reg = mysqli_fetch_array($result)) {
-                                        ?>
-                                            <div class="form-check">
-                                                <input type="checkbox" style="color: black;" class="form-check-input" name="integrantesAlimentos[]" value="<?php echo $reg['IdUsuario']; ?>" id="integrante-<?php echo $reg['IdUsuario']; ?>">
-                                                <label class="form-check-label" style="color: black;" for="integrante-<?php echo $reg['IdUsuario']; ?>">
-                                                    <?php
-                                                    if ($reg['Nombre'] != null)
-                                                        echo $reg['Nombre'];
-                                                    else
-                                                        echo $reg['Email'];
-                                                    ?>
-                                                </label>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
+                        <?php
 
-                                    <div class="form-group">
-                                        <textarea class="form-control my-textarea" max="100" id="textAlimentos" name="textAlimentos"></textarea>
-                                    </div>
+                        require '../../Conexion/conexion.php';
+                        $sql = "SELECT * FROM usuarios WHERE IdPiso=" . $_SESSION['IdPiso'] /*. " AND IdUsuario!=" . $_SESSION['IdUsuario']*/;
+                        $result = mysqli_query($conn, $sql);
 
-                                    <?php
-                                    if (isset($erroresAlimentos)) {
-                                    ?>
-                                        <div class="col-sm-12 mt-3">
-                                            <div id="passwordError" style="color:red; font-style: italic;">
-                                                <?php
+                        $sql2 = "SELECT * FROM tipoCuenta";
+                        $result2 = mysqli_query($conn, $sql2);
+                        while ($reg1 = mysqli_fetch_assoc($result2)) {
+                        ?>
 
-                                                foreach ($erroresAlimentos as $error) {
-                                                    echo $error . "<br>";
-                                                }
-                                                ?>
-                                            </div>
+
+                            <div class="col-md-4 car-margin">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?php echo $reg1['NombreCuenta'] ?></h5>
+                                        <div class="form-group">
+                                            <input type="number" min="0" step="0.01" class="form-control" id="cantidadGastoEnId<?php echo $reg1['IdTipoCuenta'] ?>" name="cantidadGastoEnId<?php echo $reg1['IdTipoCuenta'] ?>" placeholder="Cantidad gastada">
                                         </div>
-                                    <?php } ?>
+                                        <div class="form-group">
 
+                                            <?php
+                                            while ($reg = mysqli_fetch_assoc($result)) {
+                                            ?>
+                                                <div class="form-check">
+                                                    <input type="checkbox" style="color: black;" class="form-check-input" name="integrantesEnGastoConId<?php echo $reg1['IdTipoCuenta'] ?>[]" value="<?php echo $reg['IdUsuario']; ?>" id="integrante-<?php echo $reg['IdUsuario']; ?>">
+                                                    <label class="form-check-label" style="color: black;" for="integrante-<?php echo $reg['IdUsuario']; ?>">
+                                                        <?php
+                                                        if ($reg['Nombre'] != null)
+                                                            echo $reg['Nombre'];
+                                                        else
+                                                            echo $reg['Email'];
+                                                        ?>
+                                                    </label>
+                                                </div>
+                                            <?php }
+                                            mysqli_data_seek($result, 0);
+                                            ?>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <textarea class="form-control my-textarea" max="100" id="textCuenta<?php echo $reg1['IdTipoCuenta'] ?>" name="textCuenta<?php echo $reg1['IdTipoCuenta'] ?>"></textarea>
+                                        </div>
+
+
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                        <?php
+                        }
+                        ?>
 
 
-                        <div class="col-md-4 car-margin">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Productos de limpieza</h5>
-                                    <div class="form-group">
-                                        <input type="number" min="0" step="0.01" class="form-control" id="limpieza" name="limpieza" placeholder="Cantidad gastada">
-                                    </div>
-                                    <div class="form-group">
-                                        <?php
-                                        mysqli_data_seek($result, 0);
-                                        while ($reg2 = mysqli_fetch_array($result)) {
-                                        ?>
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" name="integrantesLimpieza[]" value="<?php echo $reg2['IdUsuario']; ?>" id="integrante-<?php echo $reg3['IdUsuario']; ?>">
-                                                <label class="form-check-label" style="color: black;" for="integrante-<?php echo $reg2['IdUsuario']; ?>">
-                                                    <?php
-                                                    if ($reg2['Nombre'] != null)
-                                                        echo $reg2['Nombre'];
-                                                    else
-                                                        echo $reg2['Email'];
-                                                    ?>
-                                                </label>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <textarea class="form-control my-textarea" max="100" id="textLimpieza" name="textLimpieza"></textarea>
-                                    </div>
-
-                                    <?php
-                                    if (isset($erroresOcio)) {
-                                    ?>
-                                        <div class="col-sm-12 mt-3">
-                                            <div id="passwordError" style="color:red; font-style: italic;">
-                                                <?php
-
-                                                foreach ($erroresOcio as $error) {
-                                                    echo $error . "<br>";
-                                                }
-                                                ?>
-                                            </div>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 car-margin">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Ocio</h5>
-                                    <div class="form-group">
-                                        <input type="number" min="0" step="0.01" class="form-control" id="ocio" name="ocio" placeholder="Cantidad gastada">
-                                    </div>
-                                    <div class="form-group">
-                                        <?php
-                                        mysqli_data_seek($result, 0);
-                                        while ($reg3 = mysqli_fetch_array($result)) {
-                                        ?>
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" name="integrantesOcio[]" value="<?php echo $reg3['IdUsuario']; ?>" id="integrante-<?php echo $reg3['IdUsuario']; ?>">
-                                                <label class="form-check-label" style="color: black;" for="integrante-<?php echo $reg3['IdUsuario']; ?>">
-                                                    <?php
-                                                    if ($reg3['Nombre'] != null)
-                                                        echo $reg3['Nombre'];
-                                                    else
-                                                        echo $reg3['Email'];
-                                                    ?>
-                                                </label>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <textarea class="form-control my-textarea" max="100" id="textOcio" name="textOcio"></textarea>
-                                    </div>
-
-                                    <?php
-                                    if (isset($erroresOcio)) {
-                                    ?>
-                                        <div class="col-sm-12 mt-3">
-                                            <div id="passwordError" style="color:red; font-style: italic;">
-                                                <?php
-
-                                                foreach ($erroresOcio as $error) {
-                                                    echo $error . "<br>";
-                                                }
-                                                ?>
-                                            </div>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <?php
@@ -261,7 +151,9 @@ if ($_SESSION['Rol'] == 'cliente') {
                             <div id="passwordError" style="color:blue;">
                                 <p>
                                     <?php
-                                    echo $correcto
+                                    foreach ($correcto as $correct) {
+                                        echo $correct . "<br>";
+                                    }
                                     ?>
                                 </p>
                             </div>
@@ -269,13 +161,15 @@ if ($_SESSION['Rol'] == 'cliente') {
                     <?php } ?>
 
                     <?php
-                    if (isset($erroresGeneral)) {
+                    if (isset($errores)) {
                     ?>
                         <div class="row justify-content-center mt-3">
                             <div id="passwordError" style="color:red; font-style: italic;">
                                 <p>
                                     <?php
-                                    echo $erroresGeneral
+                                    foreach ($errores as $error) {
+                                        echo $error . "<br>";
+                                    }
                                     ?>
                                 </p>
                             </div>
@@ -378,6 +272,10 @@ if ($_SESSION['Rol'] == 'cliente') {
 
         </footer>
 
+
+
+        </footer>
+
         <script>
             var pulsa = false;
             document.getElementById('botonTabla').addEventListener('click', function() {
@@ -393,7 +291,7 @@ if ($_SESSION['Rol'] == 'cliente') {
             });
         </script>
 
-        <script src="validaDatos.js"></script>
+
         <script src="../../assets/js/jquery.min.js"></script>
         <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
 

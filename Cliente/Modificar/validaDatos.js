@@ -14,6 +14,7 @@ document.getElementById("boton").addEventListener("click", (evento) => {
     var Contraseña = document.getElementById("contraseña").value;
     var RepiteContraseña = document.getElementById("contraseña2").value;
     var repeatPasswordError = document.getElementById("passwordError");
+    var nameError = document.getElementById("nameError");
 
     var mayuscula = false;
     var numero = false;
@@ -45,7 +46,7 @@ document.getElementById("boton").addEventListener("click", (evento) => {
 
   if (nombre.value.length != 0) {
     if (!patron.test(nombre.value)) {
-      alert("Introduzca un nombre correcto");
+      nameError.innerHTML = "*Introduzca un nombre correcto";
       evento.preventDefault();
     }
   }

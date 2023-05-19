@@ -28,7 +28,7 @@ if ($_SESSION['Rol'] == 'cliente') {
     <body>
         <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="../index.php"><i style="color:white" class="fa fa-home fa-2x" aria-hidden="true"></i>ContrePisos</a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                <a class="navbar-brand js-scroll-trigger" href="../index.php"><img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item mx-0 mx-lg-1">
@@ -66,6 +66,12 @@ if ($_SESSION['Rol'] == 'cliente') {
             $sql = "SELECT * FROM usuarios WHERE IdUsuario = '$IdUsuario'";
             $result = mysqli_query($conn, $sql);
 
+
+            if (isset($_SESSION['correcto'])) {
+                $correcto = $_SESSION['correcto'];
+                unset($_SESSION['correcto']);
+            }
+
             //Posible errores
             if (isset($_SESSION['erroresPassword'])) {
                 $erroresPassword = $_SESSION['erroresPassword'];
@@ -78,6 +84,10 @@ if ($_SESSION['Rol'] == 'cliente') {
             if (isset($_SESSION['erroresEmail'])) {
                 $erroresEmail = $_SESSION['erroresEmail'];
                 unset($_SESSION['erroresEmail']);
+            }
+            if (isset($_SESSION['errores'])) {
+                $errores = $_SESSION['errores'];
+                unset($_SESSION['errores']);
             }
 
 
@@ -93,7 +103,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                         <div class="col-md-12 col-lg-12 col-xl-12">
                                             <div class="card mb-5">
                                                 <div class="card-body d-flex flex-column align-items-center">
-                                                    <form action="confirmacion2.php" class="text-center" method="post">
+                                                    <form action="confirmacion.php" class="text-center" method="post">
                                                         <div class="form-group row mt-3">
                                                             <div class="col-sm-12">
                                                                 <label class="text-secondary" for="nombre">Nombre:</label>
@@ -105,7 +115,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                                             if (isset($erroresNombre)) {
                                                             ?>
                                                                 <div class="col-sm-12 mt-3">
-                                                                    <div id="passwordError" style="color:red; font-style: italic;">
+                                                                    <div id="nameError" style="color:red; font-style: italic;">
                                                                         <?php
                                                                         echo $erroresNombre;
                                                                         ?>
@@ -168,8 +178,40 @@ if ($_SESSION['Rol'] == 'cliente') {
                                         </div>
                                     </div>
                                 </div>
+
+                                <?php
+                                if (isset($correcto)) {
+                                ?>
+
+                                    <div style="color:blue;">
+                                        <p>
+                                            <?php
+                                            foreach ($correcto as $correct) {
+                                                echo $correct . "<br>";
+                                            }
+                                            ?>
+                                        </p>
+                                    </div>
+
+                                <?php } ?>
+
+
+                                <?php
+                                if (isset($errores)) {
+                                ?>
+
+                                    <div style="color:red; font-style: italic;">
+                                        <p>
+                                            <?php
+                                            foreach ($errores as $errore) {
+                                                echo $errore . "<br>";
+                                            }
+                                            ?>
+                                        </p>
+                                    </div>
+
+                                <?php } ?>
                             </section>
-                            <div></div>
                         </div>
                     </div>
                 </div>

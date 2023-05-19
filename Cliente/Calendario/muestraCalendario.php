@@ -101,7 +101,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                     Perfil
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="">Modificar</a>
+                                    <a class="dropdown-item" href="../Modificar/modificar.php">Modificar</a>
                                     <a class="dropdown-item" href="../../Conexion/desconexion.php">Salir</a>
                                 </div>
                             </div>
