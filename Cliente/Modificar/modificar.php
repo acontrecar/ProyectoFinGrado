@@ -183,7 +183,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                 if (isset($correcto)) {
                                 ?>
 
-                                    <div style="color:blue;">
+                                    <div style="color:blue;" class="mt-5">
                                         <p>
                                             <?php
                                             foreach ($correcto as $correct) {
@@ -194,6 +194,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                     </div>
 
                                 <?php } ?>
+
 
 
                                 <?php

@@ -32,6 +32,8 @@ if ($_SESSION['Rol'] == 'cliente') {
         <link rel="stylesheet" href="../../assets/bootstrap/css/Login-Form-Basic-icons.css">
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <style>
             @media (max-width: 768px) {
                 .car-margin {
@@ -100,7 +102,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                         ?>
 
 
-                            <div class="col-md-4 car-margin">
+                            <div class="col-md-4 car-margin mt-3">
                                 <div class="card">
                                     <div class="card-body">
                                         <h5 class="card-title"><?php echo $reg1['NombreCuenta'] ?></h5>
@@ -147,7 +149,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                     <?php
                     if (isset($correcto)) {
                     ?>
-                        <div class="row justify-content-center mt-3">
+                        <div class="row justify-content-center mt-5">
                             <div id="passwordError" style="color:blue;">
                                 <p>
                                     <?php
@@ -160,10 +162,11 @@ if ($_SESSION['Rol'] == 'cliente') {
                         </div>
                     <?php } ?>
 
+
                     <?php
                     if (isset($errores)) {
                     ?>
-                        <div class="row justify-content-center mt-3">
+                        <div class="row justify-content-center mt-5">
                             <div id="passwordError" style="color:red; font-style: italic;">
                                 <p>
                                     <?php
@@ -176,7 +179,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                         </div>
                     <?php } ?>
 
-                    <div class="row mt-5 justify-content-center">
+                    <div class="row mt-2 justify-content-center">
                         <button class="btn btn-success d-block" type="submit">Enviar</button>
                     </div>
 
@@ -230,7 +233,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                             <td><?php echo $reg['FechaDeuda'] ?></td>
                                             <td><?php echo $reg['Descripción'] ?></td>
                                             <td><?php echo $reg['Cantidad'] ?>€</td>
-                                            <td><a href="eliminarCuenta.php?id=<?php echo $reg['IdCuenta'] ?>"><i class="fa fa-check" aria-hidden="true"></i></a></td>
+                                            <td><a href="eliminarCuenta.php?id=<?php echo $reg['IdCuenta'] ?>" class="anclaEliminarCuentas"><i class="fa fa-check" aria-hidden="true"></i></a></td>
                                         </tr>
                                     <?php
                                     }
@@ -277,6 +280,40 @@ if ($_SESSION['Rol'] == 'cliente') {
         </footer>
 
         <script>
+            let anclaEliminarCuentas = document.querySelectorAll('.anclaEliminarCuentas');
+            anclaEliminarCuentas.forEach(ancla => {
+                ancla.addEventListener('click', () => {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: '¿Ya te han pagado esta deuda?',
+                        text: "Estas seguro",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            window.location.href = ancla.href;
+
+                            Swal.fire(
+                                '¡Cuenta eliminada!',
+                                'La cuenta ha sido eliminado correctamente.',
+                                'success'
+                            )
+                        }
+
+                        event.preventDefault();
+                    });
+                });
+            });
+
+
+
+
+
             var pulsa = false;
             document.getElementById('botonTabla').addEventListener('click', function() {
                 if (pulsa == false) {

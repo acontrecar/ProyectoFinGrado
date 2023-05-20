@@ -81,6 +81,14 @@ if ($_SESSION['Rol'] == 'administrador') {
 
                         <div id="map" style="margin-top: 1%;"></div>
                     </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="dniPropietario">DNI del propietario*</label>
+                            <input type="text" class="form-control" required name="dniPropietario" id="dniPropietario" pattern="\d{8}[A-Za-z]" title="Ingrese un DNI válido" required>
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="nombrePiso">Nombre del piso* (Para poder referenciarlo)</label>

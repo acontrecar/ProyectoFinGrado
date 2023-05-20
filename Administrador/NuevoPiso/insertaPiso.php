@@ -6,15 +6,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_SESSION['Rol'] == 'administrador')
 
     $direccion = $_POST["direccion"];
     $nombrePiso = $_POST["nombrePiso"];
+    $dni = $_POST["dniPropietario"];
 
     $_SESSION['errores'] = "";
     $_SESSION['correcto'] = "";
 
 
-    if (isset($direccion, $nombrePiso)) {
+    $patternDNi = "/^[0-9]{8}[A-Z]{1}$/";
+
+
+    if (isset($direccion, $nombrePiso, $dni)) {
 
         if (!empty($nombrePiso) && !empty($direccion)) {
             //Todo ha pasado bien
+
+            function paginaAtras()
+            {
+                header("location: paginaPrincipalNuevoPiso.php");
+                exit();
+            }
+
+            if (!preg_match($patternDNi, $dni)) {
+                $_SESSION['errores'] .= "El dni no es correcto";
+                paginaAtras();
+            }
+
             function generarContrasena()
             {
                 // Definimos los caracteres posibles para la contraseña
@@ -62,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_SESSION['Rol'] == 'administrador')
             if (checkDuplicateEmails($emails)) {
                 $_SESSION['errores'] .= "No puede haber emails duplicados";
                 header("location: paginaPrincipalNuevoPiso.php");
-                exit();
+                paginaAtras();
             }
 
             foreach ($emails as $email) {
@@ -70,13 +86,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_SESSION['Rol'] == 'administrador')
                 $resultado = mysqli_query($conn, $sql);
                 if (mysqli_num_rows($resultado) > 0) {
                     $_SESSION['errores'] .= "El email " . $email . " ya existe en la base de datos";
-                    header("location: paginaPrincipalNuevoPiso.php");
-                    exit();
+                    paginaAtras();
                 }
             }
 
             //Doy de alta el piso
-            $sql = "INSERT INTO piso (IdPiso,NombrePiso,Direccion) values ('0','$nombrePiso','$direccion')";
+            $sql = "INSERT INTO piso (IdPiso,NombrePiso,Direccion,DNI) values ('0','$nombrePiso','$direccion','$dni')";
             mysqli_query($conn, $sql);
             $_SESSION['correcto'] = "Piso dado de alta correctamente";
 
