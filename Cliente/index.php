@@ -56,7 +56,7 @@ if ($_SESSION['Rol'] == 'cliente') {
     <body>
         <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger mw-25" href="../index.html"><img class="navbar-bar" src="../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                <a class="navbar-brand js-scroll-trigger mw-25" href=""><img class="navbar-bar" src="../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item mx-0 mx-lg-1">
@@ -216,6 +216,8 @@ if ($_SESSION['Rol'] == 'cliente') {
                 $reg5 = mysqli_fetch_array($result5);
                 mysqli_data_seek($result5, 0);
 
+                $contadorEstrella = 0;
+
                 $muestraGrafico1 = false;
                 $muestraGrafico2 = false;
 
@@ -223,6 +225,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                     $nombreCuenta[] = $reg5['NombreCuenta'];
                     $sumaCuenta[] = $reg5['SumaCuenta'];
                     $muestraGrafico1 = true;
+                    $contadorEstrella++;
                 }
 
 
@@ -243,35 +246,45 @@ if ($_SESSION['Rol'] == 'cliente') {
                     $nombreAcreedor[] = $reg6['NombreAcreedor'];
                     $deudaTotal[] = $reg6['DeudaTotal'];
                     $muestraGrafico2 = true;
+                    $contadorEstrella++;
                 };
 
 
                 ?>
 
-                <div class="row justify-content-center mt-5">
 
-                    <?php
-                    if ($muestraGrafico1) {
-                    ?>
-                        <div class="col">
-                            <p>Gastos de tipo:</p>
-                            <canvas id="grafico1"></canvas>
-                        </div>
+                <?php
+                if ($contadorEstrella > 0) {
+                ?>
 
-                    <?php
-                    }
-                    if ($muestraGrafico2) {
-                    ?>
-                        <div class="col">
-                            <p>Deudas a amigos</p>
-                            <canvas id="grafico2"></canvas>
-                        </div>
-                    <?php
-                    }
-                    ?>
-                </div>
+                    <div class="row justify-content-center mt-5">
 
-                <hr class="star-light">
+                        <?php
+                        if ($muestraGrafico1) {
+                        ?>
+                            <div class="col">
+                                <p>Gastos de tipo:</p>
+                                <canvas id="grafico1"></canvas>
+                            </div>
+
+                        <?php
+                        }
+                        if ($muestraGrafico2) {
+                        ?>
+                            <div class="col">
+                                <p>Deudas a amigos</p>
+                                <canvas id="grafico2"></canvas>
+                            </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+
+                    <hr class="star-light">
+
+                <?php
+                }
+                ?>
 
                 <div class="row justify-content-center mt-2">
                     <div class="col-8">
