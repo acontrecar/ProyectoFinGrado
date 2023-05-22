@@ -21,10 +21,12 @@ if ($_SESSION['Rol'] == 'cliente') {
         <link rel="stylesheet" href="../../assets/bootstrap/css/styles.css">
         <link rel="stylesheet" href="../../assets/bootstrap/css/Login-Form-Basic-icons.css">
 
-        <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
+        <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
 
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
@@ -117,7 +119,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                 <div class="mb-5 h5">
                     <?php
                     //Menu desplegable con bootstrap
-                    require '../../Conexion/Conexion.php';
+                    require '../../Conexion/conexion.php';
                     $sql = "SELECT * FROM tipoTarea";
                     $result = mysqli_query($conn, $sql);
                     echo "<select class='form-select' name='deplegableTarea' id='deplegableTarea'>";
@@ -130,7 +132,11 @@ if ($_SESSION['Rol'] == 'cliente') {
                     echo "</select>";
                     ?>
                 </div>
-                <div id='calendar'></div>
+                <div>
+                    <?php
+                    @include('Calendario.php');
+                    ?>
+                </div>
             </div>
         </header>
 
@@ -170,7 +176,9 @@ if ($_SESSION['Rol'] == 'cliente') {
                                 <div class="col">
 
                                     <?php
-                                    $sql = "SELECT * FROM usuarios where IdPiso=" . $_SESSION['IdPiso'] . " and IdUsuario!= " . $_SESSION['IdUsuario'];
+                                    // $sql = "SELECT * FROM usuarios where IdPiso=" . $_SESSION['IdPiso'] . " and IdUsuario!= " . $_SESSION['IdUsuario'];
+                                    $sql = "SELECT * FROM usuarios where IdPiso=" . $_SESSION['IdPiso'];
+
                                     $result = mysqli_query($conn, $sql);
 
                                     echo "<div class='form-group'>";
@@ -262,181 +270,8 @@ if ($_SESSION['Rol'] == 'cliente') {
 
 
         <script>
-            var calendar, ultimoEventoId;
-
-
-            muestraCalendarioSinEventos();
-
-
-            function initCalendar(events) {
-                calendar = $('#calendar').fullCalendar({
-                    // Configuración del calendario
-                    header: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'month,agendaWeek,agendaDay'
-                    },
-                    navLinks: true,
-                    eventLimit: true,
-                    selectable: true,
-                    selectHelper: true,
-                    events: events,
-                    select: function(start, end, allDays) {
-
-                        $('#event-modal').modal('toggle');
-
-                        $('#botonModal').off().on('click', function() {
-                            var title = $('#deplegableTareaModal').val(); //obtiene el texto del option seleccionado
-                            var checkboxes = document.getElementsByName("usuarios[]"); //array de checkboxes
-                            var usuariosSeleccionados = []; //array donde se guardan los usuarios seleccionados
-
-                            for (var i = 0; i < checkboxes.length; i++) {
-                                if (checkboxes[i].checked) {
-                                    usuariosSeleccionados.push(checkboxes[i].value);
-                                }
-                            }
-
-                            if (usuariosSeleccionados.length == 0) {
-                                usuariosSeleccionados.push(<?php echo $_SESSION['IdUsuario']; ?>);
-                            }
-
-                            var descripcion = $('#descripcion').val();
-                            var fechaInicio = moment(start).format("Y-MM-DD HH:mm:ss");
-                            var fechaFin = moment(end).format("Y-MM-DD HH:mm:ss");
-
-
-                            $.ajax({
-                                url: 'insertaTarea.php',
-                                type: "POST",
-                                data: {
-                                    title: title,
-                                    start: fechaInicio,
-                                    end: fechaFin,
-                                    descripcion: descripcion,
-                                    usuariosSeleccionados: usuariosSeleccionados
-                                },
-                                success: function(response) {
-                                    if (response.success) {
-                                        $('#event-modal').modal('hide');
-                                        $('#calendar').fullCalendar('renderEvent', {
-                                            'id': response.id,
-                                            'title': response.title,
-                                            'start': response.start,
-                                            'end': response.end,
-                                            'color': response.color
-                                        });
-                                        swal("Bien", "Tu tarea se ha dado de alta", "success");
-                                    } else {
-                                        $('#tituloError').html(response.message);
-                                    }
-                                },
-                            });
-
-                            //$('#deplegableTareaModal').val('');
-                            //$('input[name="usuarios[]"]').prop('checked', false);
-                            $('#descripcion').val('');
-                        });
-                    },
-
-                    //Parte de mostrar y posiblemente eliminar evento
-                    eventClick: function(event) {
-
-
-                        $('#tituloEvento').text(event.title);
-                        $('#fechaEvento').text(moment(event.start).format('DD/MM/YYYY h:mm a') + ' - ' + moment(event.end).format('DD/MM/YYYY h:mm a'));
-                        $('#usuarios').text(event.descripcion);
-                        $('#eventDescription-modal').modal('toggle');
-
-                        $('#botonModalDescripcion').off().on('click', function() {
-                            var eventId = event.id;
-
-                            if (confirm('Estas seguro de eliminar la tarea')) {
-                                $.ajax({
-                                    url: 'borraTarea.php',
-                                    type: "POST",
-                                    data: {
-                                        id: eventId
-                                    },
-                                    success: function(response) {
-                                        $('#eventDescription-modal').modal('hide');
-                                        $('#calendar').fullCalendar('removeEvents', response.id);
-                                        swal("Bien", "Tu tarea se ha eliminado", "success");
-                                    },
-                                    error: function(response) {
-                                        $('##eventDescription-modal').modal('hide');
-
-                                    }
-                                });
-                            }
-                        });
-
-
-                    },
-
-                });
-            }
-
-            function muestraCalendarioConEventos(datosFiltrado) {
-                $(document).ready(function() {
-                    if (!calendar) {
-                        initCalendar(datosFiltrado);
-                    } else {
-                        calendar.fullCalendar('removeEvents');
-                        calendar.fullCalendar('addEventSource', datosFiltrado);
-                    }
-                });
-            }
-
-            function muestraCalendarioSinEventos() {
-                $(document).ready(function() {
-                    if (!calendar) {
-                        initCalendar([]);
-                    } else {
-                        calendar.fullCalendar('removeEvents');
-                    }
-                });
-            }
-
-            const filtroTareas = document.getElementById('deplegableTarea');
-            var datosFiltrado;
-
-            filtroTareas.addEventListener('change', () => {
-                const valorSeleccionado = filtroTareas.value;
-                const xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() {
-                    if (this.readyState === 4 && this.status === 200) {
-                        const resultados = JSON.parse(this.responseText);
-                        // aquí actualizas la página para mostrar solo los resultados obtenidos
-
-                        var tareasInicial = resultados.data;
-
-                        if (resultados.success == true) {
-                            datosFiltrado = tareasInicial.map(function(item) {
-                                return {
-                                    id: item.IdTarea,
-                                    title: item.Descripción,
-                                    start: item.FechaInicio,
-                                    end: item.FechaFin,
-                                    color: item.Color
-                                };
-                            })
-                            muestraCalendarioConEventos(datosFiltrado);
-                        } else {
-                            muestraCalendarioSinEventos();
-                        }
-
-
-                    }
-                };
-
-                xhr.open('GET', `cargaTareas.php?filtro=${valorSeleccionado}`, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-
-                xhr.send();
-            });
         </script>
 
-        <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
 
     </body>
 

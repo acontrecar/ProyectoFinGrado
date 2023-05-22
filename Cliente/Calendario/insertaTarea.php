@@ -27,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $idPiso = $_SESSION['IdPiso'];
 
+
             $sql = "INSERT INTO tareas values ('0','$idTarea','$idPiso','$start','$end','$descripcion')";
             mysqli_query($conn, $sql);
 
