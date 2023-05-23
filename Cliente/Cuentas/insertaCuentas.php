@@ -21,6 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $flagUsuarios = true;
         $flagDescripcion = true;
 
+        $contadorEntradas = 0;
+
         $tipoCuenta = $reg['IdTipoCuenta'];
         $nombreCuenta = $reg['NombreCuenta'];
 
@@ -58,11 +60,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         $resultadoInsercion = mysqli_query($conn, $sqlInsercion);
 
-                        if ($resultadoInsercion) {
+                        // if ($resultadoInsercion && $contadorEntradas == 0) {
+                        //     array_push($_SESSION['correcto'], "La cuenta de " . $nombreCuenta . " se ha insertado correctamente");
+                        // } else {
+                        //     array_push($_SESSION['errores'], "No se ha podido insertar la cuenta de " . $nombreCuenta);
+                        // }
+
+                        if ($resultadoInsercion && $contadorEntradas == 0) {
                             array_push($_SESSION['correcto'], "La cuenta de " . $nombreCuenta . " se ha insertado correctamente");
-                        } else {
-                            array_push($_SESSION['errores'], "No se ha podido insertar la cuenta de " . $nombreCuenta);
                         }
+
+                        $contadorEntradas++;
                     }
                 }
             }

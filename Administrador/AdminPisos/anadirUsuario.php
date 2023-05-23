@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 <html>
 
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" content="es">
     <title>Correo de contraseña</title>
     <style type="text/css">
         /* Estilos generales */

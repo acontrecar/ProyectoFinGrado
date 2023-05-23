@@ -27,8 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $idPiso = $_SESSION['IdPiso'];
 
-
-            $sql = "INSERT INTO tareas values ('0','$idTarea','$idPiso','$start','$end','$descripcion')";
+            $usuariosLength = count($usuariosSeleccionados);
+            $sql = "INSERT INTO tareas values ('0','$idTarea','$idPiso','$start','$end','$descripcion', '$usuariosLength')";
             mysqli_query($conn, $sql);
 
             $sql2 = "SELECT IdTarea, IdTipoTarea from tareas ORDER BY IdTarea DESC LIMIT 1";
@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
                 foreach ($usuariosSeleccionados as $usuario) {
-                    $sql3 = "INSERT INTO tareaUsuario values ('0','$usuario','$id_tarea')";
+                    $sql3 = "INSERT INTO tareaUsuario values ('0','$usuario','$id_tarea','0')";
                     mysqli_query($conn, $sql3);
                 }
 

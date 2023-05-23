@@ -83,7 +83,7 @@
                                         'end': response.end,
                                         'color': response.color
                                     });
-                                    swal("Bien", "Tu tarea se ha dado de alta", "success");
+                                    Swal.fire("Bien", "Tu tarea se ha dado de alta", "success");
                                 } else {
                                     $('#tituloError').html(response.message);
                                 }
@@ -96,38 +96,33 @@
                     });
                 },
 
+
+                //Cambiar que no se pueda eliminar la tarea y que salgan los usuarios en la descripcion
                 //Parte de mostrar y posiblemente eliminar evento
                 eventClick: function(event) {
-
+                    $('#listaUsuarios').html('');
+                    console.log(event);
 
                     $('#tituloEvento').text(event.title);
                     $('#fechaEvento').text(moment(event.start).format('DD/MM/YYYY h:mm a') + ' - ' + moment(event.end).format('DD/MM/YYYY h:mm a'));
-                    $('#usuarios').text(event.descripcion);
                     $('#eventDescription-modal').modal('toggle');
+                    var eventId = event.id;
 
-                    $('#botonModalDescripcion').off().on('click', function() {
-                        var eventId = event.id;
-
-                        if (confirm('Estas seguro de eliminar la tarea')) {
-                            $.ajax({
-                                url: 'borraTarea.php',
-                                type: "POST",
-                                data: {
-                                    id: eventId
-                                },
-                                success: function(response) {
-                                    $('#eventDescription-modal').modal('hide');
-                                    $('#calendar').fullCalendar('removeEvents', response.id);
-                                    swal("Bien", "Tu tarea se ha eliminado", "success");
-                                },
-                                error: function(response) {
-                                    $('##eventDescription-modal').modal('hide');
-
-                                }
-                            });
-                        }
+                    $.ajax({
+                        url: 'muestraUsuarios.php',
+                        type: "POST",
+                        data: {
+                            id: eventId
+                        },
+                        success: function(response) {
+                            console.log(response.data);
+                            for (var i = 0; i < response.data.length; i++) {
+                                var li = document.createElement('li');
+                                li.textContent = response.data[i].Nombre;
+                                document.getElementById('listaUsuarios').appendChild(li);
+                            }
+                        },
                     });
-
 
                 },
 

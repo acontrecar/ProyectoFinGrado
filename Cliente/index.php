@@ -50,36 +50,55 @@ if ($_SESSION['Rol'] == 'cliente') {
                     overflow-x: auto;
                 }
             }
+
+            .dropdown-menu {
+                background-color: #333;
+                /* Cambiar el color de fondo del menú desplegable */
+            }
+
+            .dropdown-menu a {
+                color: #fff !important;
+                /* Cambiar el color de letra del menú desplegable */
+            }
+
+            .dropdown-menu a:hover {
+                background-color: #555;
+                /* Cambiar el color de fondo del enlace cuando se hace hover */
+            }
         </style>
     </head>
 
     <body>
-        <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
+
+
+        <nav class="navbar navbar-light navbar-expand-md fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger mw-25" href=""><img class="navbar-bar" src="../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1">
-                            <div class="nav-item dropdown mt-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Actividades
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="Calendario/muestraCalendario.php">Calendario Grupal</a>
-                                    <!--<a class="dropdown-item" href="">Calendario Personal</a>-->
-                                    <a class="dropdown-item" href="Cuentas/paginaCuentas.php">Cuentas</a>
-                                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <a class="navbar-brand js-scroll-trigger logo-link order-1" href="../index.html">
+                        <img class="navbar-bar" src="../assets/img/logoMedioBlanco.png" style="width: 40%;">
+                    </a>
+                    <button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded ml-auto order-3" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse order-2" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto flex-nowrap">
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actividades
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown">
+                                <a class="dropdown-item text-light text-center" href="Calendario/muestraCalendario.php">Calendario Grupal</a>
+                                <a class="dropdown-item text-light text-center" href="Cuentas/paginaCuentas.php">Cuentas</a>
                             </div>
                         </li>
-                        <li class="nav-item mx-0 mx-lg-1">
-                            <div class="nav-item dropdown mt-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Perfil
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="Modificar/modificar.php">Modificar</a>
-                                    <a class="dropdown-item" href="../Conexion/desconexion.php">Salir</a>
-                                </div>
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Perfil
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown2">
+                                <a class="dropdown-item text-light text-center" href="Modificar/modificar.php">Modificar</a>
+                                <a class="dropdown-item text-light text-center" href="../Conexion/desconexion.php">Salir</a>
                             </div>
                         </li>
                     </ul>
@@ -89,7 +108,10 @@ if ($_SESSION['Rol'] == 'cliente') {
 
 
 
-        <header class="text-center text-white bg-primary masthead mt-4">
+
+        <header class="text-center text-white bg-primary masthead mt-4" style="min-height: 90vh; display: flex;
+    justify-content: center;
+    align-items: center;">
             <div class="container">
                 <h1 style="font-size: 300%;">Bienvenido a <?php echo $nombrePiso ?></h1>
                 <h1 style="font-size: 280%;">Esperamos que todo vaya bien</h1>
@@ -112,12 +134,14 @@ if ($_SESSION['Rol'] == 'cliente') {
 
                         $sql2 = "SELECT DISTINCT t.IdTarea, t.IdTipoTarea, t.FechaInicio, t.FechaFin, t.Descripción 
                                 FROM tareas t, tareaUsuario p 
-                                WHERE p.IdUsuario=" . $_SESSION['IdUsuario'] . " AND p.IdTarea=t.IdTarea 
+                                WHERE p.IdUsuario = " . $_SESSION['IdUsuario'] . " AND p.IdTarea = t.IdTarea 
                                 AND (
                                     t.FechaInicio BETWEEN DATE(NOW()) AND DATE_SUB(DATE(NOW()), INTERVAL WEEKDAY(NOW()) DAY) 
                                     OR t.FechaFin BETWEEN DATE(NOW()) AND DATE_SUB(DATE(NOW()), INTERVAL WEEKDAY(NOW()) - 6 DAY)
                                 )
-                                ";
+                                AND p.Completado = 0";
+
+
                         $result2 = mysqli_query($conn, $sql2);
 
                         $num_filas = mysqli_num_rows($result2);
@@ -299,30 +323,21 @@ if ($_SESSION['Rol'] == 'cliente') {
         </header>
 
 
-
-
-
-
-        <footer class="text-center footer">
+        <footer class="text-center footer" style="max-height: 20vh; display: flex; justify-content: center; align-items: center;">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-4 mb-5 mb-lg-0">
-                    </div>
-                    <div class="col-md-4 mb-5 mb-lg-0">
+                    <div class="col-md-12">
                         <h4 class="text-uppercase">About me</h4>
-                        <ul class="list-inline">
-                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://github.com/acontrecar"><i class="fa fa-github fa-fw"></i></a>
-                            </li>
-                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://www.linkedin.com/in/antoniocontrerasc%C3%A1rdenas/"><i class="fa fa-linkedin-square fa-fw"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-
+                        <div class="social-icons">
+                            <a class="btn btn-outline-light btn-social rounded-circle" role="button" href="https://github.com/acontrecar"><i class="fa fa-github fa-fw"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle" role="button" href="https://www.linkedin.com/in/antoniocontrerasc%C3%A1rdenas/"><i class="fa fa-linkedin-square fa-fw"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </footer>
+
+
         <script>
             var pulsa = false;
             document.getElementById('botonTareas').addEventListener('click', function() {
@@ -352,7 +367,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                 ancla.addEventListener('click', () => {
                     event.preventDefault();
                     Swal.fire({
-                        title: '¿Estás seguro de querer eliminar esta tarea?',
+                        title: '¿De verdad has terminado la tarea?',
                         text: "Esta acción no se puede deshacer.",
                         icon: 'warning',
                         showCancelButton: true,
@@ -365,7 +380,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                             window.location.href = ancla.href;
                             Swal.fire(
                                 '¡Tarea eliminada!',
-                                'La tarea ha sido eliminada correctamente.',
+                                'A la espera de los demás.',
                                 'success'
                             )
                         }

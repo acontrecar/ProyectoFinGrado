@@ -65,28 +65,46 @@ if ($_SESSION['Rol'] == 'administrador' && isset($piso_id)) {
     </head>
 
     <body>
-        <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
+        <nav class="navbar navbar-light navbar-expand-md fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger mw-25" href="../index.php"><img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1">
-                            <div class="nav-item dropdown mt-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Perfil
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="../../Conexion/desconexion.php">Salir</a>
-                                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <a class="navbar-brand js-scroll-trigger logo-link order-1" href="../index.php">
+                        <img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;">
+                    </a>
+                    <button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded ml-auto order-3" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse order-2" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto flex-nowrap">
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown2">
+                                <a class="dropdown-item text-light text-center" href="crudPisos.php">Listado</a>
+                                <a class="dropdown-item text-light text-center" href="../NuevoPiso/paginaPrincipalNuevoPiso.php">Nuevo Piso</a>
                             </div>
                         </li>
+
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Perfil
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown2">
+                                <a class="dropdown-item text-light text-center" href="../../Conexion/desconexion.php">Salir</a>
+                            </div>
+                        </li>
+
                     </ul>
                 </div>
             </div>
         </nav>
 
 
-        <header class="text-center text-white bg-primary masthead mt-4" style="min-height: 80vh;">
+        <header class="text-center text-white bg-primary masthead mt-4" style="min-height: 90vh; display: flex;
+    justify-content: center;
+    align-items: center;">
             <div class="container">
                 <button id="botonEliminarPiso" class="btn btn-danger">Eliminar piso</button>
 
@@ -154,19 +172,22 @@ if ($_SESSION['Rol'] == 'administrador' && isset($piso_id)) {
                 ?>
 
                 <div class="row mt-5">
-                    <div class="col">
-                        <input type="email" class="form-control" placeholder="Añada el nuevo email" style="width: 50%;">
-                        <button id="botonAnadirUsuario" class="btn btn-success" disabled>Añadir usuario</button>
+                    <div class="col-md-6 mb-3">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Añadir nuevo email" style="max-width: 300px;">
+                            <div class="input-group-append">
+                                <button id="botonAnadirUsuario" class="btn btn-success" disabled>Añadir usuario</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-
-                <div class="row mt-5">
                     <div class="col-md-6">
-                        <h4 class="mt-3 mb-3">Editar el DNI del propietario (enter to save):</h4>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="text" id="dniInput" maxlength="9" minlength="9" class="form-control rounded" value="<?php echo $dniPropietario ?>">
+                        <div class="input-group">
+                            <input type="text" id="dniInput" maxlength="9" minlength="9" class="form-control rounded" value="<?php echo $dniPropietario ?>">
+                            <div class="input-group-append">
+                                <button class="btn btn-success" id="botonDni" type="button">Guardar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -191,22 +212,15 @@ if ($_SESSION['Rol'] == 'administrador' && isset($piso_id)) {
 
 
 
-        <footer class="text-center footer">
+        <footer class="text-center footer" style="max-height: 20vh; display: flex; justify-content: center; align-items: center;">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-4 mb-5 mb-lg-0">
-                    </div>
-                    <div class="col-md-4 mb-5 mb-lg-0">
+                    <div class="col-md-12">
                         <h4 class="text-uppercase">About me</h4>
-                        <ul class="list-inline">
-                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://github.com/acontrecar"><i class="fa fa-github fa-fw"></i></a>
-                            </li>
-                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://www.linkedin.com/in/antoniocontrerasc%C3%A1rdenas/"><i class="fa fa-linkedin-square fa-fw"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-
+                        <div class="social-icons">
+                            <a class="btn btn-outline-light btn-social rounded-circle" role="button" href="https://github.com/acontrecar"><i class="fa fa-github fa-fw"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle" role="button" href="https://www.linkedin.com/in/antoniocontrerasc%C3%A1rdenas/"><i class="fa fa-linkedin-square fa-fw"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -309,35 +323,29 @@ if ($_SESSION['Rol'] == 'administrador' && isset($piso_id)) {
 
 
             const dniInput = document.getElementById('dniInput');
-            dniInput.addEventListener('keyup', (event) => {
-
-                if (event.keyCode === 13) {
-
-                    if (validarDNI(dniInput.value)) {
-                        Swal.fire({
-                            title: '¿Estás seguro de querer cambiar el DNI del propietario?',
-                            text: "Esta acción no se puede deshacer.",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            cancelButtonText: 'Cancelar',
-                            confirmButtonText: 'Sí, cambiar'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = `editarDni.php?dni=${dniInput.value}&piso_id=${<?php echo $piso_id ?>}`;
-                                Swal.fire(
-                                    '¡DNI cambiado!',
-                                    'El DNI ha sido cambiado correctamente.',
-                                    'success'
-                                )
-                            }
-                        })
-                    }
-
+            document.getElementById('botonDni').addEventListener('click', (event) => {
+                event.preventDefault();
+                if (validarDNI(dniInput.value)) {
+                    Swal.fire({
+                        title: '¿Estás seguro de querer cambiar el DNI del propietario?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonText: 'Sí, cambiar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = `editarDni.php?dni=${dniInput.value}&piso_id=${<?php echo $piso_id ?>}`;
+                            Swal.fire(
+                                '¡DNI cambiado!',
+                                'El DNI ha sido cambiado correctamente.',
+                                'success'
+                            )
+                        }
+                    })
                 }
-
-
             });
 
 

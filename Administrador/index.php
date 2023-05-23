@@ -25,21 +25,37 @@ if ($_SESSION['Rol'] == 'administrador') {
     </head>
 
     <body>
-        <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
+        <nav class="navbar navbar-light navbar-expand-md fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger mw-25" href="../index.html"><img class="navbar-bar" src="../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1">
-                            <div class="nav-item dropdown mt-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Perfil
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="../Conexion/desconexion.php">Salir</a>
-                                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <a class="navbar-brand js-scroll-trigger logo-link order-1" href="../index.html">
+                        <img class="navbar-bar" src="../assets/img/logoMedioBlanco.png" style="width: 40%;">
+                    </a>
+                    <button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded ml-auto order-3" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse order-2" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto flex-nowrap">
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown2">
+                                <a class="dropdown-item text-light text-center" href="AdminPisos/crudPisos.php">Listado</a>
+                                <a class="dropdown-item text-light text-center" href="NuevoPiso/paginaPrincipalNuevoPiso.php">Nuevo Piso</a>
                             </div>
                         </li>
+
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Perfil
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown2">
+                                <a class="dropdown-item text-light text-center" href="../Conexion/desconexion.php">Salir</a>
+                            </div>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -47,7 +63,9 @@ if ($_SESSION['Rol'] == 'administrador') {
 
 
 
-        <header class="text-center text-white bg-primary masthead mt-4" style="min-height: 80vh;">
+        <header class="text-center text-white bg-primary masthead mt-4" style="min-height: 90vh; display: flex;
+    justify-content: center;
+    align-items: center;">
             <div class="container">
                 <h1>Bienvenido</h1>
                 <h4 class="mt-4">¿Que deseas hacer?</h4>
@@ -58,7 +76,8 @@ if ($_SESSION['Rol'] == 'administrador') {
                         <h2>
                             <a href="AdminPisos/crudPisos.php" class="text-decoration-none" style="color: white;">
                                 <i class="fa fa-plu pr-2" aria-hidden="true"></i>
-                                Administrar pisos
+                                Administrar pisos<br>
+                                <img src="../assets/img/administradoPisos.svg" alt="Admin vsg" style="width: 50%;">
                             </a>
                         </h2>
                     </div>
@@ -67,7 +86,8 @@ if ($_SESSION['Rol'] == 'administrador') {
                         <h2>
                             <a href="NuevoPiso/paginaPrincipalNuevoPiso.php" class="text-decoration-none" style="color: white;">
                                 <i class="fa fa-plu" aria-hidden="true"></i>
-                                Nuevo piso
+                                Nuevo piso<br>
+                                <img src="../assets/img/nuevoPisoAdmin.svg" alt="Nuevo Piso vsg" style="width: 50%;">
                             </a>
                         </h2>
                     </div>
@@ -78,22 +98,15 @@ if ($_SESSION['Rol'] == 'administrador') {
 
 
 
-        <footer class="text-center footer">
+        <footer class="text-center footer" style="max-height: 20vh; display: flex; justify-content: center; align-items: center;">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-4 mb-5 mb-lg-0">
-                    </div>
-                    <div class="col-md-4 mb-5 mb-lg-0">
+                    <div class="col-md-12">
                         <h4 class="text-uppercase">About me</h4>
-                        <ul class="list-inline">
-                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://github.com/acontrecar"><i class="fa fa-github fa-fw"></i></a>
-                            </li>
-                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://www.linkedin.com/in/antoniocontrerasc%C3%A1rdenas/"><i class="fa fa-linkedin-square fa-fw"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-
+                        <div class="social-icons">
+                            <a class="btn btn-outline-light btn-social rounded-circle" role="button" href="https://github.com/acontrecar"><i class="fa fa-github fa-fw"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle" role="button" href="https://www.linkedin.com/in/antoniocontrerasc%C3%A1rdenas/"><i class="fa fa-linkedin-square fa-fw"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>

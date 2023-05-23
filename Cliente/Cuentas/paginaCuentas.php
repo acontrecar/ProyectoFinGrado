@@ -47,36 +47,67 @@ if ($_SESSION['Rol'] == 'cliente') {
                 border-radius: 8px;
                 padding: 12px;
             }
+
+            .my-textarea:focus {
+                outline: none;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+
+            @media (max-width: 480px) {
+                .table {
+                    font-size: 12px;
+                    width: 100%;
+                    overflow-x: auto;
+                }
+            }
+
+            .dropdown-menu {
+                background-color: #333;
+                /* Cambiar el color de fondo del menú desplegable */
+            }
+
+            .dropdown-menu a {
+                color: #fff !important;
+                /* Cambiar el color de letra del menú desplegable */
+            }
+
+            .dropdown-menu a:hover {
+                background-color: #555;
+                /* Cambiar el color de fondo del enlace cuando se hace hover */
+            }
         </style>
 
     </head>
 
     <body>
-        <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
+        <nav class="navbar navbar-light navbar-expand-md fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="../index.php"><img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1">
-                            <div class="nav-item dropdown mt-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Actividades
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="../Calendario/muestraCalendario.php">Calendario Grupal</a>
-                                    <a class="dropdown-item" href="#">Cuentas</a>
-                                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <a class="navbar-brand js-scroll-trigger logo-link order-1" href="../index.php">
+                        <img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;">
+                    </a>
+                    <button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded ml-auto order-3" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse order-2" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto flex-nowrap">
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actividades
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown">
+                                <a class="dropdown-item text-light text-center" href="../Calendario/muestraCalendario.php">Calendario Grupal</a>
+                                <a class="dropdown-item text-light text-center" href="">Cuentas</a>
                             </div>
                         </li>
-                        <li class="nav-item mx-0 mx-lg-1">
-                            <div class="nav-item dropdown mt-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Perfil
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="../Modificar/modificar.php">Modificar</a>
-                                    <a class="dropdown-item" href="../../Conexion/desconexion.php">Salir</a>
-                                </div>
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Perfil
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown2">
+                                <a class="dropdown-item text-light text-center" href="../Modificar/modificar.php">Modificar</a>
+                                <a class="dropdown-item text-light text-center" href="../../Conexion/desconexion.php">Salir</a>
                             </div>
                         </li>
                     </ul>
@@ -85,7 +116,9 @@ if ($_SESSION['Rol'] == 'cliente') {
         </nav>
 
 
-        <header class="text-center text-white bg-primary masthead mt-5">
+        <header class="text-center text-white bg-primary masthead mt-5" style="min-height: 90vh; display: flex;
+    justify-content: center;
+    align-items: center;">
             <div class="container" style="color: black;">
                 <form action="insertaCuentas.php" method="POST">
                     <div class="row">
@@ -179,7 +212,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                         </div>
                     <?php } ?>
 
-                    <div class="row mt-2 justify-content-center">
+                    <div class="row mt-4 justify-content-center">
                         <button class="btn btn-success d-block" type="submit">Enviar</button>
                     </div>
 
@@ -255,29 +288,21 @@ if ($_SESSION['Rol'] == 'cliente') {
 
 
 
-        <footer class="text-center footer">
+        <footer class="text-center footer" style="max-height: 20vh; display: flex; position: sticky ;justify-content: center; align-items: center;">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-4 mb-5 mb-lg-0">
-
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <h4 class="text-uppercase">About me</h4>
-                        <ul class="list-inline">
-                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://github.com/acontrecar"><i class="fa fa-github fa-fw"></i></a>
-                            </li>
-                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://www.linkedin.com/in/antoniocontrerasc%C3%A1rdenas/"><i class="fa fa-linkedin-square fa-fw"></i></a>
-                            </li>
-                        </ul>
+                        <div class="social-icons">
+                            <a class="btn btn-outline-light btn-social rounded-circle" role="button" href="https://github.com/acontrecar"><i class="fa fa-github fa-fw"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle" role="button" href="https://www.linkedin.com/in/antoniocontrerasc%C3%A1rdenas/"><i class="fa fa-linkedin-square fa-fw"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </footer>
 
 
-
-        </footer>
 
         <script>
             let anclaEliminarCuentas = document.querySelectorAll('.anclaEliminarCuentas');
