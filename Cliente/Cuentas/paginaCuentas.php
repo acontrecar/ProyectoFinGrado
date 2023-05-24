@@ -4,15 +4,18 @@ session_start();
 // Verifica si hay un mensaje de error almacenado en la sesión
 if ($_SESSION['Rol'] == 'cliente') {
 
-    if (isset($_SESSION['correcto'])) {
-        $correcto = $_SESSION['correcto'];
-        unset($_SESSION['correcto']);
-    }
+    // if (isset($_SESSION['correcto'])) {
+    //     $correcto = $_SESSION['correcto'];
+    //     unset($_SESSION['correcto']);
+    // }
 
-    if (isset($_SESSION['erroress'])) {
-        $errores = $_SESSION['erroress'];
-        unset($_SESSION['erroress']);
-    }
+
+
+
+    // if (isset($_SESSION['erroress'])) {
+    //     $errores = $_SESSION['erroress'];
+    //     unset($_SESSION['erroress']);
+    // }
 ?>
 
 
@@ -74,6 +77,34 @@ if ($_SESSION['Rol'] == 'cliente') {
             .dropdown-menu a:hover {
                 background-color: #555;
                 /* Cambiar el color de fondo del enlace cuando se hace hover */
+            }
+
+            #snackbar {
+                position: fixed;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 20px;
+                background-color: #2c3e50;
+                color: #fff;
+                padding: 12px;
+                border-radius: 4px;
+                z-index: 9999;
+                animation: slide-up 0.5s ease-out;
+            }
+
+            #snackbar.hide {
+                display: none;
+            }
+
+
+            @keyframes slide-up {
+                from {
+                    transform: translateX(-50%) translateY(100%);
+                }
+
+                to {
+                    transform: translateX(-50%) translateY(0);
+                }
             }
         </style>
 
@@ -179,21 +210,10 @@ if ($_SESSION['Rol'] == 'cliente') {
 
                     </div>
 
-                    <?php
-                    if (isset($correcto)) {
-                    ?>
-                        <div class="row justify-content-center mt-5">
-                            <div id="passwordError" style="color:blue;">
-                                <p>
-                                    <?php
-                                    foreach ($correcto as $correct) {
-                                        echo $correct . "<br>";
-                                    }
-                                    ?>
-                                </p>
-                            </div>
-                        </div>
-                    <?php } ?>
+                    <div id="snackbar" class="hide">
+                        <span id="snackbar-message"></span>
+                    </div>
+
 
 
                     <?php
@@ -351,8 +371,33 @@ if ($_SESSION['Rol'] == 'cliente') {
                     pulsa = false;
                 }
             });
+
+
+            function showSnackbar(message) {
+                var snackbar = document.getElementById("snackbar");
+                var snackbarMessage = document.getElementById("snackbar-message");
+
+                snackbarMessage.textContent = message;
+                snackbar.classList.remove("hide");
+                setTimeout(function() {
+                    snackbar.classList.add("hide");
+                }, 3000); // Snackbar se oculta después de 3 segundos
+            }
+
+            // Ejemplo de uso
+            // showSnackbar("¡Snackbar de ejemplo!");
         </script>
 
+
+
+        <?php
+        if (isset($_SESSION['correcto']) && !empty($_SESSION['correcto'])) {
+            $correcto = $_SESSION['correcto'];
+            unset($_SESSION['correcto']);
+
+            // Llama a la función showSnackbar() para mostrar el mensaje
+            echo "<script>showSnackbar('Cuenta ingresada correctamente');</script>";
+        } ?>
 
         <script src="../../assets/js/jquery.min.js"></script>
         <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>

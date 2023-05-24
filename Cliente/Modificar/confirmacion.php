@@ -10,7 +10,7 @@ if (!isset($_SESSION['IdUsuario']) && $_SESSION['Rol'] != 'cliente') {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
-    $_SESSION['errores'] = array();
+    $_SESSION['erroresss'] = array();
     $_SESSION['correcto'] = array();
 
     $IdUsuario = $_SESSION['IdUsuario'];
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     if (strlen($clave) == 0 && strlen($claveRepetida) == 0 && strcmp($nombre, $_SESSION['Nombre']) == 0) {
-        $_SESSION['errores'][] = "No se ha modificado nada";
+        $_SESSION['erroresss'][] = "No se ha modificado nada";
         header("location: modificar.php");
         exit();
     }
