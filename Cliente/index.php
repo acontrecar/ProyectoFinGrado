@@ -298,7 +298,7 @@ if ($_SESSION['Rol'] == 'cliente') {
 
 
                 <div class="row justify-content-center mt-2">
-                    <div class="col-8">
+                    <div class="col">
                         <div class="mb-3 p-3 map-container">
                             <div id='map' style='width: 100%; height: 400px;'></div>
                             <p><?php echo $direccion ?></p>
