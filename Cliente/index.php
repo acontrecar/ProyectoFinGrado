@@ -65,6 +65,13 @@ if ($_SESSION['Rol'] == 'cliente') {
                 background-color: #555;
                 /* Cambiar el color de fondo del enlace cuando se hace hover */
             }
+
+            @media (max-width: 767px) {
+                .map-container {
+                    width: 100%;
+                    /* Define un ancho del 100% para el contenedor en dispositivos móviles */
+                }
+            }
         </style>
     </head>
 
@@ -228,32 +235,26 @@ if ($_SESSION['Rol'] == 'cliente') {
 
 
                 <?php
-                //Sacar los datos de la base de datos para el grafico 1
                 $sql5 = "SELECT tc.NombreCuenta, SUM(c.Cantidad) as SumaCuenta 
-                        FROM cuentas c 
-                        INNER JOIN tipoCuenta tc ON c.IdTipoCuenta = tc.IdTipoCuenta
-                        WHERE c.IdUsuarioDeudor = '$id' OR c.IdUsuarioAcreedor = '$id'
-                        GROUP BY c.IdTipoCuenta
-                        ";
+                    FROM cuentas c 
+                    INNER JOIN tipoCuenta tc ON c.IdTipoCuenta = tc.IdTipoCuenta
+                    WHERE c.IdUsuarioDeudor = '$id'
+                    GROUP BY c.IdTipoCuenta";
 
                 $result5 = mysqli_query($conn, $sql5);
-                $reg5 = mysqli_fetch_array($result5);
-                mysqli_data_seek($result5, 0);
-
-                $contadorEstrella = 0;
-
-                $muestraGrafico1 = false;
-                $muestraGrafico2 = false;
+                $nombreCuenta = array();
+                $sumaCuenta = array();
 
                 while ($reg5 = mysqli_fetch_array($result5)) {
                     $nombreCuenta[] = $reg5['NombreCuenta'];
                     $sumaCuenta[] = $reg5['SumaCuenta'];
-                    $muestraGrafico1 = true;
-                    $contadorEstrella++;
                 }
 
+                $nombreCuentaJSON = json_encode($nombreCuenta);
+                $sumaCuentaJSON = json_encode($sumaCuenta);
 
-                //Sacar los datos de la base de datos para el grafico 2
+
+
                 $sql6 = "SELECT ua.Nombre as NombreAcreedor, SUM(c.Cantidad) as DeudaTotal
                         FROM cuentas c 
                         INNER JOIN usuarios ud ON c.IdUsuarioDeudor = ud.IdUsuario 
@@ -263,61 +264,48 @@ if ($_SESSION['Rol'] == 'cliente') {
                         ORDER BY ua.Nombre ASC";
 
                 $result6 = mysqli_query($conn, $sql6);
-                $reg6 = mysqli_fetch_array($result6);
-                mysqli_data_seek($result6, 0);
+                $nombreAcreedor = array();
+                $deudaTotal = array();
 
                 while ($reg6 = mysqli_fetch_array($result6)) {
                     $nombreAcreedor[] = $reg6['NombreAcreedor'];
                     $deudaTotal[] = $reg6['DeudaTotal'];
-                    $muestraGrafico2 = true;
-                    $contadorEstrella++;
                 };
 
+                $nombreAcreedorJSON = json_encode($nombreAcreedor);
+                $deudaTotalJSON = json_encode($deudaTotal);
+
 
                 ?>
 
 
-                <?php
-                if ($contadorEstrella > 0) {
-                ?>
 
-                    <div class="row justify-content-center mt-5">
 
-                        <?php
-                        if ($muestraGrafico1) {
-                        ?>
-                            <div class="col">
-                                <p>Gastos de tipo:</p>
-                                <canvas id="grafico1"></canvas>
-                            </div>
-
-                        <?php
-                        }
-                        if ($muestraGrafico2) {
-                        ?>
-                            <div class="col">
-                                <p>Deudas a amigos</p>
-                                <canvas id="grafico2"></canvas>
-                            </div>
-                        <?php
-                        }
-                        ?>
+                <div class="row justify-content-center mt-5">
+                    <div class="col">
+                        <p>Gastos de tipo:</p>
+                        <canvas id="grafico1"></canvas>
                     </div>
 
-                    <hr class="star-light">
 
-                <?php
-                }
-                ?>
+                    <div class="col">
+                        <p>Deudas a amigos</p>
+                        <canvas id="grafico2"></canvas>
+                    </div>
+                </div>
+
+                <hr class="star-light">
+
 
                 <div class="row justify-content-center mt-2">
                     <div class="col-8">
-                        <div class="mb-3 p-3">
+                        <div class="mb-3 p-3 map-container">
                             <div id='map' style='width: 100%; height: 400px;'></div>
                             <p><?php echo $direccion ?></p>
                         </div>
                     </div>
                 </div>
+
 
             </div>
         </header>
@@ -389,16 +377,29 @@ if ($_SESSION['Rol'] == 'cliente') {
             });
         });
 
-        //Grafico 1 donde muestre el dinero que te has gastado en cada tipo de gasto cogiendolos de la base de datos
+
+        var options = {
+            maintainAspectRatio: true,
+            responsive: true
+        };
+
+        var dataLabels = <?php echo $nombreCuentaJSON; ?>;
+        var dataValues = <?php echo $sumaCuentaJSON; ?>;
+
+        // Verificar si los datos están vacíos
+        if (dataLabels.length === 0 || dataValues.length === 0) {
+            dataLabels = ['No hay datos'];
+            dataValues = [1];
+        }
 
         var ctx1 = document.getElementById('grafico1').getContext('2d');
         var myChart1 = new Chart(ctx1, {
             type: 'pie',
             data: {
-                labels: <?php echo json_encode($nombreCuenta); ?>,
+                labels: dataLabels,
                 datasets: [{
                     label: 'Gastos (€): ',
-                    data: <?php echo json_encode($sumaCuenta); ?>,
+                    data: dataValues,
                     backgroundColor: [
                         '#FF6384',
                         '#36A2EB',
@@ -408,21 +409,28 @@ if ($_SESSION['Rol'] == 'cliente') {
                     ]
                 }]
             },
-            options: {
-                responsive: true
-            }
+            options
         });
 
+
+
+        var dataLabels2 = <?php echo $nombreAcreedorJSON; ?>;
+        var dataValues2 = <?php echo $deudaTotalJSON; ?>;
+
+        if (dataLabels2.length === 0 || dataValues2.length === 0) {
+            dataLabels2 = ['No hay datos'];
+            dataValues2 = [1];
+        }
 
         //Grafico 2 donde muestre el dinero que debes a cada persona cogiendolos de la base de datos
         var ctx2 = document.getElementById('grafico2').getContext('2d');
         var myChart2 = new Chart(ctx2, {
             type: 'pie',
             data: {
-                labels: <?php echo json_encode($nombreAcreedor); ?>,
+                labels: dataLabels2,
                 datasets: [{
                     label: 'Gastos (€)',
-                    data: <?php echo json_encode($deudaTotal); ?>,
+                    data: dataValues2,
                     backgroundColor: [
                         '#FF6384',
                         '#36A2EB',
@@ -482,6 +490,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                     alert("Error al geocodificar " + direccion);
                 }
             });
+
         });
     </script>
 

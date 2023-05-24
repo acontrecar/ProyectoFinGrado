@@ -33,10 +33,6 @@ if ($_SESSION['Rol'] == 'cliente') {
 
 
         <style>
-            .fc-body {
-                background-color: #f5f5f5;
-            }
-
             select {
                 padding: 8px;
                 border: none;
@@ -106,37 +102,6 @@ if ($_SESSION['Rol'] == 'cliente') {
     </head>
 
     <body>
-        <!-- <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
-            <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="../index.php"><img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1">
-                            <div class="nav-item dropdown mt-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Actividades
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Calendario Grupal</a>
-                                    <a class="dropdown-item" href="../Cuentas/paginaCuentas.php">Cuentas</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item mx-0 mx-lg-1">
-                            <div class="nav-item dropdown mt-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Perfil
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="../Modificar/modificar.php">Modificar</a>
-                                    <a class="dropdown-item" href="../../Conexion/desconexion.php">Salir</a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav> -->
 
         <nav class="navbar navbar-light navbar-expand-md fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">

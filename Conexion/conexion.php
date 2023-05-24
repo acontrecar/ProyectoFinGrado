@@ -2,7 +2,7 @@
 $servername = "sql513.main-hosting.eu";
 $database = "u417389617_pisos";
 $username = "u417389617_antonioc";
-$password = "B9!m;f*b";
+$password = "#p|zC4Irw2H";
 
 $conn = mysqli_connect($servername, $username, $password, $database);
 

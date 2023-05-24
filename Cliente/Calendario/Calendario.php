@@ -6,11 +6,16 @@
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' />
     <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/es.js"></script>
     <!-- <title>ContrePisos</title> -->
 
     <style>
         .fc-body {
             background-color: #f5f5f5;
+        }
+
+        .fc .fc-axis {
+            color: #128f76;
         }
     </style>
 </head>
@@ -29,6 +34,7 @@
         function initCalendar(events) {
             calendar = $('#calendar').fullCalendar({
                 // Configuración del calendario
+                locale: 'es',
                 header: {
                     left: 'prev,next today',
                     center: 'title',

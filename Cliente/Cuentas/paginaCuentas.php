@@ -9,9 +9,9 @@ if ($_SESSION['Rol'] == 'cliente') {
         unset($_SESSION['correcto']);
     }
 
-    if (isset($_SESSION['errores'])) {
-        $errores = $_SESSION['errores'];
-        unset($_SESSION['errores']);
+    if (isset($_SESSION['erroress'])) {
+        $errores = $_SESSION['erroress'];
+        unset($_SESSION['erroress']);
     }
 ?>
 
@@ -235,7 +235,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                             INNER JOIN usuarios ua ON c.IdUsuarioAcreedor = ua.IdUsuario 
                             WHERE c.IdUsuarioAcreedor = '$id'
                             and c.IdUsuarioDeudor!='$id'
-                            ORDER BY c.FechaDeuda DESC";
+                            ORDER BY c.Descripción ASC";
 
                     $result2 = mysqli_query($conn, $sql);
 

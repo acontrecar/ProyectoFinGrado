@@ -7,7 +7,7 @@ if (!isset($_SESSION['IdUsuario']) || $_SESSION['Rol'] != 'cliente') {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $_SESSION['errores'] = array();
+    $_SESSION['erroress'] = array();
     $_SESSION['correcto'] = array();
 
     $sql = "SELECT * FROM tipoCuenta";

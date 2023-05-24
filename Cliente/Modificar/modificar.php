@@ -85,9 +85,9 @@ if ($_SESSION['Rol'] == 'cliente') {
                 $erroresEmail = $_SESSION['erroresEmail'];
                 unset($_SESSION['erroresEmail']);
             }
-            if (isset($_SESSION['errores'])) {
-                $errores = $_SESSION['errores'];
-                unset($_SESSION['errores']);
+            if (isset($_SESSION['erroresss'])) {
+                $errores = $_SESSION['erroresss'];
+                unset($_SESSION['erroresss']);
             }
 
 
@@ -95,7 +95,7 @@ if ($_SESSION['Rol'] == 'cliente') {
             ?>
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-8 mx-auto" style="width: 70%;">
+                        <div class="col-12 col-lg-8 mx-auto">
                             <h1 class="brand-heading" style="font-size: 40px;padding-left: 3px;margin-left: 0px;margin-bottom: -23px;">MODIFICAR</h1>
                             <section class="py-4 py-xl-5">
                                 <div class="container">
