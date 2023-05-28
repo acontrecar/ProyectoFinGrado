@@ -104,15 +104,16 @@
 
 
                 //Cambiar que no se pueda eliminar la tarea y que salgan los usuarios en la descripcion
-                //Parte de mostrar y posiblemente eliminar evento
                 eventClick: function(event) {
                     $('#listaUsuarios').html('');
-                    console.log(event);
 
                     $('#tituloEvento').text(event.title);
                     $('#fechaEvento').text(moment(event.start).format('DD/MM/YYYY h:mm a') + ' - ' + moment(event.end).format('DD/MM/YYYY h:mm a'));
                     $('#eventDescription-modal').modal('toggle');
                     var eventId = event.id;
+
+                    console.log('entrando en el evento click');
+                    console.log(eventId);
 
                     $.ajax({
                         url: 'muestraUsuarios.php',

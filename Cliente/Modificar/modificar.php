@@ -126,11 +126,6 @@ if ($_SESSION['Rol'] == 'cliente') {
                 $erroresEmail = $_SESSION['erroresEmail'];
                 unset($_SESSION['erroresEmail']);
             }
-            if (isset($_SESSION['erroresss'])) {
-                $errores = $_SESSION['erroresss'];
-                unset($_SESSION['erroresss']);
-            }
-
 
             if ($reg = mysqli_fetch_array($result)) {
             ?>
@@ -219,22 +214,6 @@ if ($_SESSION['Rol'] == 'cliente') {
                                         </div>
                                     </div>
                                 </div>
-
-                                <?php
-                                if (isset($errores)) {
-                                ?>
-
-                                    <div style="color:red; font-style: italic;">
-                                        <p>
-                                            <?php
-                                            foreach ($errores as $errore) {
-                                                echo $errore . "<br>";
-                                            }
-                                            ?>
-                                        </p>
-                                    </div>
-
-                                <?php } ?>
                             </section>
                         </div>
                     </div>
@@ -326,7 +305,7 @@ if ($_SESSION['Rol'] == 'cliente') {
 
 
         if (isset($_SESSION['erroresss']) && !empty($_SESSION['erroresss'])) {
-            $correcto = $_SESSION['erroresss'];
+            $erroneo = $_SESSION['erroresss'];
             unset($_SESSION['erroresss']);
 
             // Llama a la función showSnackbar() para mostrar el mensaje

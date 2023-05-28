@@ -58,7 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'title' => $descripcion,
                     'start' => $start,
                     'end' => $end,
-                    'color' => $Color
+                    'color' => $Color,
+                    'id' => $id_tarea
                 );
                 echo json_encode($response);
             } else {
