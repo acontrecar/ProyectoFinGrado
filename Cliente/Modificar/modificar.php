@@ -195,7 +195,7 @@ if ($_SESSION['Rol'] == 'cliente') {
                                                                 <input type="text" class="form-control" id="contraseña" name="contraseña" placeholder="Contraseña">
                                                             </div>
                                                             <div class="col-sm-6 mt-4">
-                                                                <input type="text" class="form-control" id="contraseña2" name="contraseña2" placeholder="Confirmar Contraseña">
+                                                                <input type="password" class="form-control" id="contraseña2" name="contraseña2" placeholder="Confirmar Contraseña">
                                                             </div>
                                                         </div>
 

@@ -60,21 +60,37 @@ if ($_SESSION['Rol'] == 'administrador') {
     </head>
 
     <body>
-        <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
+        <nav class="navbar navbar-light navbar-expand-md fixed-top bg-secondary text-uppercase" id="mainNav">
             <div class="container">
-                <a class="navbar-brand js-scroll-trigger mw-25" href="../index.php"><img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;"></a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1">
-                            <div class="nav-item dropdown mt-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Perfil
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="../../Conexion/desconexion.php">Salir</a>
-                                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <a class="navbar-brand js-scroll-trigger logo-link order-1" href="../index.php">
+                        <img class="navbar-bar" src="../../assets/img/logoMedioBlanco.png" style="width: 40%;">
+                    </a>
+                    <button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded ml-auto order-3" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse order-2" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto flex-nowrap">
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown2">
+                                <a class="dropdown-item text-light text-center" href="../AdminPisos/crudPisos.php">Listado</a>
+                                <a class="dropdown-item text-light text-center" href="">Nuevo Piso</a>
                             </div>
                         </li>
+
+                        <li class="nav-item mx-0 mx-lg-1 dropdown">
+                            <a class="nav-link dropdown-toggle text-light text-center" href="#" id="dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Perfil
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown2">
+                                <a class="dropdown-item text-light text-center" href="../../Conexion/desconexion.php">Salir</a>
+                            </div>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -82,7 +98,9 @@ if ($_SESSION['Rol'] == 'administrador') {
 
 
 
-        <header class="text-center text-white bg-primary masthead mt-4">
+        <header class="text-center text-white bg-primary masthead mt-4" style="min-height: 90vh; display: flex;
+    justify-content: center;
+    align-items: center;">
             <div class="container">
                 <form method="POST" action="insertaPiso.php" enctype="multipart/form-data">
                     <div class="form-group text-center">
@@ -149,7 +167,7 @@ if ($_SESSION['Rol'] == 'administrador') {
 
 
 
-        <footer class="text-center footer">
+        <footer class="text-center footer" style="max-height: 20vh; display: flex; justify-content: center; align-items: center;">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 mb-5 mb-lg-0">
