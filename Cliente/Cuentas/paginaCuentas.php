@@ -355,13 +355,18 @@ if ($_SESSION['Rol'] == 'cliente') {
                     }).then((result) => {
                         if (result.isConfirmed) {
 
-                            window.location.href = ancla.href;
-
                             Swal.fire(
                                 '¡Cuenta eliminada!',
                                 'La cuenta ha sido eliminado correctamente.',
                                 'success'
                             )
+
+
+                            setTimeout(function() {
+                                window.location.href = ancla.href;
+                            }, 1000);
+
+
                         }
 
                         event.preventDefault();

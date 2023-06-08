@@ -378,12 +378,18 @@ if ($_SESSION['Rol'] == 'cliente') {
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = ancla.href;
                             Swal.fire(
                                 '¡Tarea eliminada!',
                                 'A la espera de los demás.',
                                 'success'
                             )
+                            setTimeout(
+                                function() {
+                                    window.location.href = ancla.href;
+                                }, 1000
+                            )
+
+
                         }
                     });
                 });

@@ -212,24 +212,19 @@ if ($_SESSION['Rol'] == 'administrador') {
                     method: 'GET',
                     dataType: 'json',
                     success: function(response) {
-                        // La respuesta contiene un arreglo de resultados de geocodificación
                         var features = response.features;
 
                         if (features.length > 0) {
-                            // Toma la primera ubicación resultante
                             var ubicacion = features[0].center;
 
-                            // Remueve el marcador anterior, si existe
                             if (marcador !== null) {
                                 marcador.remove();
                             }
 
-                            // Agrega un marcador en la ubicación resultante
                             marcador = new mapboxgl.Marker()
                                 .setLngLat(ubicacion)
                                 .addTo(map);
 
-                            // Mueve el mapa a la ubicación resultante
                             map.setCenter(ubicacion);
                         } else {
                             alert("Error al geocodificar " + direccion);
